@@ -9,10 +9,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Bean da tela inicial do HSG HIS.
- * Responsável apenas pela camada de apresentação — sem comunicação com services.
- */
 @Named("homeBean")
 @ViewScoped
 public class HomeBean implements Serializable {
@@ -34,10 +30,6 @@ public class HomeBean implements Serializable {
         modulos      = construirModulos();
     }
 
-    // -----------------------------------------------------------------------
-    // Helpers privados
-    // -----------------------------------------------------------------------
-
     private String resolverSaudacao() {
         int hora = LocalTime.now().getHour();
         if (hora < 12) return "Bom dia";
@@ -58,18 +50,10 @@ public class HomeBean implements Serializable {
         );
     }
 
-    // -----------------------------------------------------------------------
-    // Getters
-    // -----------------------------------------------------------------------
-
     public String getNomeUsuario()  { return nomeUsuario; }
     public String getDataAtual()    { return dataAtual; }
     public String getSaudacao()     { return saudacao; }
     public List<ModuloAcesso> getModulos() { return modulos; }
-
-    // -----------------------------------------------------------------------
-    // Classe interna imutável que representa um módulo do sistema
-    // -----------------------------------------------------------------------
 
     public static final class ModuloAcesso implements Serializable {
 
