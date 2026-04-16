@@ -1,12 +1,7 @@
 package br.com.hsg.domain.enums;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 public enum IndicativoStatus {
 
@@ -15,16 +10,20 @@ public enum IndicativoStatus {
     S("S", "Suspenso"),
     E("E", "Excluído");
 
-    private String valor;
-    private String descricao;
+    private final String valor;
+    private final String descricao;
 
-    public static IndicativoStatus getIndicativoStatus(String valor) {
-        for (IndicativoStatus indicativoStatus : IndicativoStatus.values()) {
-            if (indicativoStatus.getValor().equalsIgnoreCase(valor)) {
-                return indicativoStatus;
+    IndicativoStatus(String valor, String descricao) {
+        this.valor = valor;
+        this.descricao = descricao;
+    }
+
+    public static IndicativoStatus fromValor(String valor) {
+        for (IndicativoStatus status : values()) {
+            if (status.valor.equalsIgnoreCase(valor)) {
+                return status;
             }
         }
-
-        throw new IllegalArgumentException("Valor de IndicativoStatus inválido: " + valor);
+        throw new IllegalArgumentException("Valor inválido: " + valor);
     }
 }

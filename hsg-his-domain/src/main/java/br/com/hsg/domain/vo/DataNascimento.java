@@ -2,10 +2,11 @@ package br.com.hsg.domain.vo;
 
 import lombok.Getter;
 
+import javax.persistence.Embeddable;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
+@Embeddable
 public class DataNascimento {
 
     @Getter

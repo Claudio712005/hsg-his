@@ -8,7 +8,6 @@ import javax.persistence.Embeddable;
 import java.util.Objects;
 
 @Embeddable
-@AttributeOverride(name = "valor", column = @Column(name = "CPF_PAC"))
 public class CPF {
 
     @Getter
