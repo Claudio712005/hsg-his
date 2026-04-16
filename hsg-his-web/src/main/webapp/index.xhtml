@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<h:head>
+    <title>HSG HIS — Hospital Information System</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <h:outputStylesheet library="primefaces" name="themes/nova-light/theme.css"/>
+    <h:outputStylesheet name="css/hsg-his.css"/>
+</h:head>
+
+<h:body styleClass="hsg-body">
+
+    <!-- ================================================================ -->
+    <!-- BARRA DE TOPO                                                     -->
+    <!-- ================================================================ -->
+    <div class="hsg-topbar">
+        <div class="hsg-topbar-left">
+            <span class="hsg-logo-icon pi pi-heart"/>
+            <span class="hsg-logo-text">HSG HIS</span>
+            <span class="hsg-logo-subtitle">Hospital Information System</span>
+        </div>
+        <div class="hsg-topbar-right">
+            <span class="pi pi-calendar hsg-topbar-icon"/>
+            <span class="hsg-topbar-info">#{homeBean.dataAtual}</span>
+            <span class="pi pi-user hsg-topbar-icon" style="margin-left:1rem;"/>
+            <span class="hsg-topbar-info">#{homeBean.nomeUsuario}</span>
+        </div>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- MENU PRINCIPAL                                                    -->
+    <!-- ================================================================ -->
+    <p:menubar styleClass="hsg-menubar">
+        <p:menuitem value="Início"        icon="pi pi-home"         url="#"/>
+        <p:submenu  label="Atendimento"   icon="pi pi-users">
+            <p:menuitem value="Pacientes"    icon="pi pi-user"       url="#"/>
+            <p:menuitem value="Internações"  icon="pi pi-home"       url="#"/>
+            <p:menuitem value="Ambulatório"  icon="pi pi-calendar"   url="#"/>
+        </p:submenu>
+        <p:submenu  label="Clínico"       icon="pi pi-file">
+            <p:menuitem value="Prontuário"   icon="pi pi-file-o"     url="#"/>
+            <p:menuitem value="Laboratório"  icon="pi pi-chart-bar"  url="#"/>
+        </p:submenu>
+        <p:submenu  label="Administrativo" icon="pi pi-briefcase">
+            <p:menuitem value="Farmácia"     icon="pi pi-shopping-cart" url="#"/>
+            <p:menuitem value="Faturamento"  icon="pi pi-dollar"     url="#"/>
+            <p:menuitem value="Relatórios"   icon="pi pi-chart-line"  url="#"/>
+        </p:submenu>
+    </p:menubar>
+
+    <!-- ================================================================ -->
+    <!-- CONTEÚDO PRINCIPAL                                                -->
+    <!-- ================================================================ -->
+    <div class="hsg-content">
+
+        <!-- Saudação -->
+        <div class="hsg-welcome-panel">
+            <div class="hsg-welcome-text">
+                <h2>#{homeBean.saudacao}, #{homeBean.nomeUsuario}!</h2>
+                <p>Bem-vindo ao sistema de gestão hospitalar. Selecione um módulo abaixo para começar.</p>
+            </div>
+            <div class="hsg-welcome-badge">
+                <span class="pi pi-check-circle" style="font-size:2rem; color:#4CAF50;"/>
+                <span>Sistema online</span>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- INDICADORES RÁPIDOS                                           -->
+        <!-- ============================================================ -->
+        <div class="hsg-stats-row">
+
+            <div class="hsg-stat-card hsg-stat-blue">
+                <div class="hsg-stat-icon">
+                    <span class="pi pi-users"/>
+                </div>
+                <div class="hsg-stat-info">
+                    <span class="hsg-stat-value">—</span>
+                    <span class="hsg-stat-label">Pacientes Internados</span>
+                </div>
+            </div>
+
+            <div class="hsg-stat-card hsg-stat-green">
+                <div class="hsg-stat-icon">
+                    <span class="pi pi-calendar"/>
+                </div>
+                <div class="hsg-stat-info">
+                    <span class="hsg-stat-value">—</span>
+                    <span class="hsg-stat-label">Consultas Hoje</span>
+                </div>
+            </div>
+
+            <div class="hsg-stat-card hsg-stat-orange">
+                <div class="hsg-stat-icon">
+                    <span class="pi pi-chart-bar"/>
+                </div>
+                <div class="hsg-stat-info">
+                    <span class="hsg-stat-value">—</span>
+                    <span class="hsg-stat-label">Exames Pendentes</span>
+                </div>
+            </div>
+
+            <div class="hsg-stat-card hsg-stat-purple">
+                <div class="hsg-stat-icon">
+                    <span class="pi pi-dollar"/>
+                </div>
+                <div class="hsg-stat-info">
+                    <span class="hsg-stat-value">—</span>
+                    <span class="hsg-stat-label">Faturamento do Mês</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- MÓDULOS DO SISTEMA                                            -->
+        <!-- ============================================================ -->
+        <h:form id="frmModulos">
+            <p:panel header="Módulos do Sistema" styleClass="hsg-modulos-panel">
+                <div class="hsg-modulos-grid">
+                    <ui:repeat value="#{homeBean.modulos}" var="modulo">
+                        <div class="hsg-modulo-card">
+                            <div class="hsg-modulo-icon">
+                                <span class="#{modulo.icone}"/>
+                            </div>
+                            <div class="hsg-modulo-body">
+                                <h3 class="hsg-modulo-titulo">#{modulo.titulo}</h3>
+                                <p class="hsg-modulo-descricao">#{modulo.descricao}</p>
+                            </div>
+                            <div class="hsg-modulo-footer">
+                                <p:commandButton value="Acessar"
+                                                icon="pi pi-arrow-right"
+                                                iconPos="right"
+                                                styleClass="hsg-btn-acessar"
+                                                onclick="PrimeFaces.info('Módulo #{modulo.titulo} em desenvolvimento.');"
+                                                type="button"/>
+                            </div>
+                        </div>
+                    </ui:repeat>
+                </div>
+            </p:panel>
+        </h:form>
+
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- RODAPÉ                                                            -->
+    <!-- ================================================================ -->
+    <div class="hsg-footer">
+        <span>HSG HIS © #{homeBean.dataAtual.substring(6)} — Hospital Saúde e Gestão</span>
+        <span class="hsg-footer-version">v1.0-SNAPSHOT</span>
+    </div>
+
+    <p:growl id="msgs" showDetail="true" life="4000"/>
+
+</h:body>
+</html>
