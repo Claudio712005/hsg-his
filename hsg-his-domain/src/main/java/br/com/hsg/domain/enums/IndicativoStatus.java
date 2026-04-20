@@ -6,6 +6,7 @@ import lombok.Getter;
 public enum IndicativoStatus {
 
     A("A", "Ativo"),
+    P("P", "Pendente"),
     I("I", "Inativo"),
     S("S", "Suspenso"),
     E("E", "Excluído");

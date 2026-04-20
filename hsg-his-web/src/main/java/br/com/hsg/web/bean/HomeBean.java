@@ -1,4 +1,4 @@
-package br.com.hsg.view.bean;
+package br.com.hsg.web.bean;
 
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;

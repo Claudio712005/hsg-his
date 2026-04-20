@@ -15,7 +15,6 @@
 
     <dependencies>
 
-        <!-- Módulo de serviço (EJB local — provided pelo EAR em runtime) -->
         <dependency>
             <groupId>br.com.hsg</groupId>
             <artifactId>hsg-his-service</artifactId>
@@ -24,7 +23,6 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- Módulo de domínio (provided pelo EAR em runtime) -->
         <dependency>
             <groupId>br.com.hsg</groupId>
             <artifactId>hsg-his-domain</artifactId>
@@ -32,34 +30,34 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- JSF API -->
         <dependency>
             <groupId>javax.faces</groupId>
             <artifactId>javax.faces-api</artifactId>
         </dependency>
 
-        <!-- Servlet API -->
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
         </dependency>
 
-        <!-- CDI API -->
         <dependency>
             <groupId>javax.enterprise</groupId>
             <artifactId>cdi-api</artifactId>
         </dependency>
 
-        <!-- PrimeFaces -->
         <dependency>
             <groupId>org.primefaces</groupId>
             <artifactId>primefaces</artifactId>
         </dependency>
 
-        <!-- Testes -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
         </dependency>
 
     </dependencies>

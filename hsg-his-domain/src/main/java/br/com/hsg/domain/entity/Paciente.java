@@ -63,6 +63,10 @@ public class Paciente {
     @Column(name = "DT_ULT_ATU")
     private LocalDateTime dataUltimaAtualizacao;
 
+    @OneToOne
+    @JoinColumn(name = "ID_CONTA_USU", referencedColumnName = "ID_CONTA_USU")
+    private ContaUsuario contaUsuario;
+
     protected Paciente() {}
 
     public static Paciente criar(
@@ -80,6 +84,10 @@ public class Paciente {
         paciente.dataCadastro = LocalDateTime.now();
         paciente.status = IndicativoStatus.A;
         return paciente;
+    }
+
+    public boolean podeLogar(){
+        return IndicativoStatus.A.equals(this.status);
     }
 
     public boolean isAtivo() {
