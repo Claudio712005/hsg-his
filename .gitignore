@@ -49,3 +49,9 @@ build/
 
 # OS
 Thumbs.db
+
+# Variáveis de ambiente (contém senhas)
+.env
+
+# Docker
+docker-compose.override.yml
