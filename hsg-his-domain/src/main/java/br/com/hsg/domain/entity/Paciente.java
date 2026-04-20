@@ -2,6 +2,7 @@ package br.com.hsg.domain.entity;
 
 import br.com.hsg.domain.converter.IndicativoStatusConverter;
 import br.com.hsg.domain.enums.IndicativoStatus;
+import br.com.hsg.domain.enums.TipoSanguineo;
 import br.com.hsg.domain.vo.DataNascimento;
 import br.com.hsg.domain.vo.Email;
 import br.com.hsg.domain.vo.NomeCompleto;
@@ -62,6 +63,10 @@ public class Paciente {
     @Getter
     @Column(name = "DT_ULT_ATU")
     private LocalDateTime dataUltimaAtualizacao;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "TP_SANGUINEO", length = 6)
+    private TipoSanguineo tipoSanguineo;
 
     protected Paciente() {}
 

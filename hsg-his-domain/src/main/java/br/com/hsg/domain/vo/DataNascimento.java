@@ -15,15 +15,21 @@ public class DataNascimento {
     protected DataNascimento() {}
 
     public DataNascimento(LocalDate valor) {
+        if (valor == null) {
+            throw new IllegalArgumentException("DataNascimento: valor nulo.");
+        }
+
         LocalDate hoje = LocalDate.now();
 
-        if(valor.isBefore(hoje)) {
+        if(hoje.isBefore(valor)) {
             throw new IllegalArgumentException("Data de nascimento deve ser anterior à data atual");
         }
 
         if(hoje.minusYears(18).isBefore(valor)) {
             throw new IllegalArgumentException("Paciente deve ser maior de 18 anos");
         }
+
+        this.valor = valor;
     }
 
     @Override
