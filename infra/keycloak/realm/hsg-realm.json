@@ -104,6 +104,7 @@
 
   "users": [
     {
+      "id":         "ad000000-0000-0000-0000-000000000001",
       "username":   "admin.hsg",
       "email":      "admin@hsg.com.br",
       "firstName":  "Administrador",
@@ -113,8 +114,8 @@
       "credentials": [
         {
           "type":      "password",
-          "value":     "Admin@HSG2026",
-          "temporary": true
+          "value":     "Admin@123",
+          "temporary": false
         }
       ],
       "realmRoles": ["hsg-admin"]

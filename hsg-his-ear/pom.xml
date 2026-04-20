@@ -49,10 +49,12 @@
                             <groupId>br.com.hsg</groupId>
                             <artifactId>hsg-his-web</artifactId>
                             <contextRoot>/hsg-his</contextRoot>
+                            <bundleFileName>hsg-his-web.war</bundleFileName>
                         </webModule>
                         <ejbModule>
                             <groupId>br.com.hsg</groupId>
                             <artifactId>hsg-his-service</artifactId>
+                            <bundleFileName>hsg-his-service.jar</bundleFileName>
                         </ejbModule>
                     </modules>
                 </configuration>

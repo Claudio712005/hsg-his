@@ -3,12 +3,20 @@
 
     <persistence-unit name="defaultPU" transaction-type="JTA">
 
-        <jta-data-source>java:jboss/datasources/ExampleDS</jta-data-source>
+        <jta-data-source>java:jboss/datasources/HsgDS</jta-data-source>
+
+        <class>br.com.hsg.domain.entity.ContaUsuario</class>
+        <class>br.com.hsg.domain.entity.Paciente</class>
+        <class>br.com.hsg.domain.entity.MedicaoPaciente</class>
+        <class>br.com.hsg.domain.entity.TipoSanguineo</class>
+
 
         <properties>
-            <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
-            <property name="hibernate.hbm2ddl.auto" value="update"/>
-            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.dialect"            value="org.hibernate.dialect.PostgreSQL95Dialect"/>
+            <property name="hibernate.hbm2ddl.auto"       value="none"/>
+            <property name="hibernate.show_sql"           value="false"/>
+            <property name="hibernate.format_sql"         value="true"/>
+            <property name="hibernate.default_schema"     value="hsg"/>
         </properties>
 
     </persistence-unit>

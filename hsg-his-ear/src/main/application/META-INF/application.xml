@@ -8,7 +8,7 @@
     <display-name>hsg-his</display-name>
 
     <module>
-        <ejb>hsg-his-service-1.0-SNAPSHOT.jar</ejb>
+        <ejb>hsg-his-service.jar</ejb>
     </module>
 
     <module>

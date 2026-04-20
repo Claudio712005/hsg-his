@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "TB_TP_SANG", schema = "HSG")
+@Table(name = "TB_TP_SANG", schema = "hsg")
 public class TipoSanguineo {
 
     @Id

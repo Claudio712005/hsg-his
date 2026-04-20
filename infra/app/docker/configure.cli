@@ -1,0 +1,26 @@
+embed-server --std-out=echo
+
+module add \
+  --name=org.postgresql \
+  --resources=/opt/postgresql.jar \
+  --dependencies=javax.api,sun.jdk
+
+/subsystem=datasources/jdbc-driver=postgresql:add( \
+  driver-name=postgresql, \
+  driver-module-name=org.postgresql, \
+  driver-class-name=org.postgresql.Driver \
+)
+
+data-source add \
+  --name=HsgDS \
+  --jndi-name=java:jboss/datasources/HsgDS \
+  --driver-name=postgresql \
+  --connection-url=jdbc:postgresql://${env.APP_DB_HOST:postgres}:${env.APP_DB_PORT:5432}/${env.APP_DB_NAME:hsg}?currentSchema=hsg \
+  --user-name=${env.APP_DB_USER:postgres} \
+  --password=${env.APP_DB_PASSWORD:postgres} \
+  --min-pool-size=5 \
+  --max-pool-size=20 \
+  --use-java-context=true \
+  --enabled=true
+
+stop-embedded-server

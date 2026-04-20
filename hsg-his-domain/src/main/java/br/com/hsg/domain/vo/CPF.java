@@ -1,9 +1,6 @@
 package br.com.hsg.domain.vo;
 
 import lombok.Getter;
-
-import javax.persistence.AttributeOverride;
-import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.util.Objects;
 

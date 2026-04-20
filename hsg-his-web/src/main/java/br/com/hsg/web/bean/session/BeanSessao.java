@@ -14,4 +14,19 @@ public class BeanSessao implements Serializable {
 
     private PacienteResponseDTO paciente;
 
+    public PacienteResponseDTO getPaciente() {
+        return paciente;
+    }
+
+    public void setPaciente(PacienteResponseDTO paciente) {
+        this.paciente = paciente;
+    }
+
+    public boolean isLogado() {
+        return paciente != null;
+    }
+
+    public void encerrarSessao() {
+        paciente = null;
+    }
 }

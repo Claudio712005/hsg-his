@@ -13,9 +13,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "TB_PAC", schema = "HSG")
+@Table(name = "TB_PAC", schema = "hsg")
 public class Paciente {
 
+    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_PAC")
     @SequenceGenerator(name = "SEQ_PAC", sequenceName = "SEQ_PAC", allocationSize = 1)
@@ -30,7 +31,7 @@ public class Paciente {
     private NomeCompleto nome;
 
     @Embedded
-    @AttributeOverride(name = "value", column = @Column(name = "DS_EMAIL"))
+    @AttributeOverride(name = "valor", column = @Column(name = "DS_EMAIL"))
     private Email email;
 
     @Column(name = "NR_CPF_HASH", nullable = false, unique = true, length = 64)
@@ -63,6 +64,7 @@ public class Paciente {
     @Column(name = "DT_ULT_ATU")
     private LocalDateTime dataUltimaAtualizacao;
 
+    @Getter
     @OneToOne
     @JoinColumn(name = "ID_CONTA_USU", referencedColumnName = "ID_CONTA_USU")
     private ContaUsuario contaUsuario;
