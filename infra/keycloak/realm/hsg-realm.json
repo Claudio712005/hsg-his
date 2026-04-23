@@ -154,6 +154,23 @@
         }
       ],
       "realmRoles": ["hsg-enfermeiro"]
+    },
+    {
+        "id":         "cf000000-0000-0000-0000-000000000001",
+        "username":   "claudio.filho",
+        "email":   "clausilvaaraujo11@gmail.com",
+        "firstName":  "Cláudio",
+        "lastName":   "Filho",
+        "enabled":    true,
+        "emailVerified": true,
+        "credentials": [
+          {
+            "type":      "password",
+            "value":     "Test3@HSG2026",
+            "temporary": true
+          }
+        ],
+        "realmRoles": ["hsg-paciente"]
     }
   ]
 }

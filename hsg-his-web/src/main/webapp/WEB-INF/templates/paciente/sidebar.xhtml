@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <aside class="sidebar">
+        <div class="sb-title">Menu do Paciente</div>
+
+        <div class="menu-group open">
+            <div class="menu-header">
+                <span class="chev"/>
+                <span class="mi-icon ic-home"/>
+                Meu Painel
+            </div>
+            <div class="menu-items">
+                <a href="#" class="#{request.servletPath eq '/paciente/home.xhtml' ? 'active' : ''}">Visão Geral</a>
+                <a href="#">Notificações</a>
+                <a href="#">Mensagens do Hospital</a>
+            </div>
+        </div>
+
+        <div class="menu-group">
+            <div class="menu-header">
+                <span class="chev"/>
+                <span class="mi-icon ic-user"/>
+                Meus Dados
+            </div>
+            <div class="menu-items">
+                <a href="#">Dados Cadastrais</a>
+                <a href="#">Endereço e Contato</a>
+                <a href="#">Convênio</a>
+                <a href="#">Alterar Senha</a>
+            </div>
+        </div>
+
+        <div class="menu-group">
+            <div class="menu-header">
+                <span class="chev"/>
+                <span class="mi-icon ic-cal"/>
+                Consultas
+            </div>
+            <div class="menu-items">
+                <a href="#">Agendadas</a>
+                <a href="#">Histórico</a>
+                <a href="#">Solicitar Agendamento</a>
+            </div>
+        </div>
+
+        <div class="menu-group">
+            <div class="menu-header">
+                <span class="chev"/>
+                <span class="mi-icon ic-exam"/>
+                Exames
+            </div>
+            <div class="menu-items">
+                <a href="#">Resultados Disponíveis</a>
+                <a href="#">Pendentes</a>
+                <a href="#">Histórico Completo</a>
+            </div>
+        </div>
+
+        <div class="menu-group">
+            <div class="menu-header">
+                <span class="chev"/>
+                <span class="mi-icon ic-int"/>
+                Internações
+            </div>
+            <div class="menu-items">
+                <a href="#">Internações Atuais</a>
+                <a href="#">Histórico de Internações</a>
+                <a href="#">Relatórios de Alta</a>
+            </div>
+        </div>
+
+        <div class="menu-group">
+            <div class="menu-header">
+                <span class="chev"/>
+                <span class="mi-icon ic-fin"/>
+                Financeiro
+            </div>
+            <div class="menu-items">
+                <a href="#">Faturas e Boletos</a>
+                <a href="#">Extrato do Convênio</a>
+                <a href="#">Nota Fiscal / Recibo</a>
+            </div>
+        </div>
+
+        <div class="menu-group">
+            <div class="menu-header">
+                <span class="chev"/>
+                <span class="mi-icon ic-help">?</span>
+                Ajuda
+            </div>
+            <div class="menu-items">
+                <a href="#">Perguntas Frequentes</a>
+                <a href="#">Fale Conosco</a>
+                <a href="#">Telefones Úteis</a>
+            </div>
+        </div>
+
+    </aside>
+
+</ui:composition>

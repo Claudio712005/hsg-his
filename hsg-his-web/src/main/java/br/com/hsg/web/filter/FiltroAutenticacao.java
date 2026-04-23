@@ -7,6 +7,7 @@ import br.com.hsg.web.dto.response.PacienteResponseDTO;
 
 import javax.inject.Inject;
 import javax.json.Json;
+import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.servlet.*;
@@ -130,9 +131,14 @@ public class FiltroAutenticacao implements Filter {
 
         String originalUrl = (String) session.getAttribute(ATTR_ORIGINAL_URL);
         session.removeAttribute(ATTR_ORIGINAL_URL);
+
+        String defaultHome = hasRole(accessToken, "hsg-paciente")
+                ? req.getContextPath() + "/paciente/home.xhtml"
+                : req.getContextPath() + "/home.xhtml";
+
         if (originalUrl == null || originalUrl.isEmpty()
                 || originalUrl.endsWith("/callback")) {
-            originalUrl = req.getContextPath() + "/home.xhtml";
+            originalUrl = defaultHome;
         }
         res.sendRedirect(originalUrl);
     }
@@ -203,6 +209,33 @@ public class FiltroAutenticacao implements Filter {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    private boolean hasRole(String jwt, String role) {
+        try {
+            String[] parts = jwt.split("\\.");
+            if (parts.length < 2) return false;
+            String encoded = parts[1];
+            switch (encoded.length() % 4) {
+                case 2: encoded += "=="; break;
+                case 3: encoded += "=";  break;
+                default: break;
+            }
+            String payload = new String(Base64.getUrlDecoder().decode(encoded), "UTF-8");
+            try (JsonReader reader = Json.createReader(new StringReader(payload))) {
+                JsonObject obj = reader.readObject();
+                if (!obj.containsKey("realm_access")) return false;
+                JsonObject realmAccess = obj.getJsonObject("realm_access");
+                if (!realmAccess.containsKey("roles")) return false;
+                JsonArray roles = realmAccess.getJsonArray("roles");
+                for (int i = 0; i < roles.size(); i++) {
+                    if (role.equals(roles.getString(i))) return true;
+                }
+            }
+        } catch (Exception e) {
+            // ignore parsing errors - return false (safe default)
+        }
+        return false;
     }
 
     private static String envOr(String key, String defaultValue) {

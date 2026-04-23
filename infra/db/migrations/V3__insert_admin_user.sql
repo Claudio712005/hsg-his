@@ -1,6 +1,3 @@
--- Fixed Keycloak UUID that matches the admin.hsg user in hsg-realm.json
--- UUID: ad000000-0000-0000-0000-000000000001
-
 INSERT INTO hsg.tb_conta_usu (id_conta_usu, id_kcl_usu, nm_usu)
 VALUES (
     nextval('hsg.seq_conta_usu'),
