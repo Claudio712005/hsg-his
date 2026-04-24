@@ -35,4 +35,8 @@ public class TipoSanguineo {
 
     @Column(name = "DT_ATU_TP_SANG")
     private LocalDateTime dataAtualizacaoPaciente;
+
+    public TipoSanguineoEnum getTipoSanguineo() {
+        return tipoSanguineo;
+    }
 }

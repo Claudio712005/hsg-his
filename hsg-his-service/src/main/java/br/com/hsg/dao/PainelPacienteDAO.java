@@ -2,6 +2,7 @@ package br.com.hsg.dao;
 
 import br.com.hsg.domain.entity.MedicaoPaciente;
 import br.com.hsg.domain.entity.Paciente;
+import br.com.hsg.domain.entity.TipoSanguineo;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -35,6 +36,18 @@ public class PainelPacienteDAO {
                 "WHERE m.paciente.id = :id " +
                 "ORDER BY m.dataMedicao DESC",
                 MedicaoPaciente.class
+        ).setParameter("id", pacienteId)
+         .setMaxResults(1)
+         .getResultList();
+        return result.isEmpty() ? null : result.get(0);
+    }
+
+    public TipoSanguineo buscarUltimoTipoSanguineo(Long pacienteId) {
+        List<TipoSanguineo> result = em.createQuery(
+                "SELECT t FROM TipoSanguineo t " +
+                "WHERE t.paciente.id = :id " +
+                "ORDER BY t.dataCadastroPaciente DESC",
+                TipoSanguineo.class
         ).setParameter("id", pacienteId)
          .setMaxResults(1)
          .getResultList();

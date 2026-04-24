@@ -7,8 +7,11 @@
 
         <class>br.com.hsg.domain.entity.ContaUsuario</class>
         <class>br.com.hsg.domain.entity.Paciente</class>
+        <class>br.com.hsg.domain.entity.Enfermeiro</class>
         <class>br.com.hsg.domain.entity.MedicaoPaciente</class>
         <class>br.com.hsg.domain.entity.TipoSanguineo</class>
+        <class>br.com.hsg.domain.entity.SolicitacaoAtualizacao</class>
+        <class>br.com.hsg.domain.entity.Endereco</class>
 
 
         <properties>

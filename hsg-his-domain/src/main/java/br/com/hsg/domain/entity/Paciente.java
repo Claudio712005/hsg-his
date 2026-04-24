@@ -114,19 +114,19 @@ public class Paciente {
     }
 
     public String getNomeCompleto() {
-        return this.nome.getNomeCompleto();
+        return this.nome != null ? this.nome.getNomeCompleto() : null;
     }
 
     public String getEmail() {
-        return this.email.getValor();
+        return this.email != null ? this.email.getValor() : null;
     }
 
     public LocalDate getDataNascimento() {
-        return this.dataNascimento.getValor();
+        return this.dataNascimento != null ? this.dataNascimento.getValor() : null;
     }
 
     public String getTelefone() {
-        return this.telefone.getValor();
+        return this.telefone != null ? this.telefone.getValor() : null;
     }
 
     public void atualizarDadosPessoais(

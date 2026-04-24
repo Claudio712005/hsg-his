@@ -26,4 +26,16 @@ public class PacienteDAO {
             return null;
         }
     }
+
+    public Paciente buscarPorId(Long id) {
+        try {
+            return em.createQuery(
+                    "SELECT p FROM Paciente p WHERE p.id = :id",
+                    Paciente.class
+            ).setParameter("id", id)
+             .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
 }

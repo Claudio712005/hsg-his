@@ -1,7 +1,7 @@
 package br.com.hsg.web.filter;
 
 import br.com.hsg.domain.entity.Paciente;
-import br.com.hsg.service.facade.PacienteServiceFacade;
+import br.com.hsg.service.facade.paciente.PacienteServiceFacade;
 import br.com.hsg.web.bean.session.BeanSessao;
 import br.com.hsg.web.dto.response.PacienteResponseDTO;
 
@@ -233,7 +233,6 @@ public class FiltroAutenticacao implements Filter {
                 }
             }
         } catch (Exception e) {
-            // ignore parsing errors - return false (safe default)
         }
         return false;
     }
