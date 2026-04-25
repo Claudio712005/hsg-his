@@ -10,6 +10,7 @@ import br.com.hsg.web.dto.form.AtualizacaoClinicaDTO;
 import br.com.hsg.web.dto.form.AtualizacaoEnderecoDTO;
 import br.com.hsg.web.dto.response.PacienteResponseDTO;
 import br.com.hsg.web.model.HistoricoLazyModel;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -111,7 +112,7 @@ public class AtualizarDadosPacienteBean implements Serializable {
             mensagem(FacesMessage.SEVERITY_WARN, "Dados inválidos", e.getMessage());
         } catch (Exception e) {
             mensagem(FacesMessage.SEVERITY_ERROR, "Erro ao registrar",
-                    "Não foi possível registrar a solicitação. Tente novamente.");
+                    e.getMessage());
         }
     }
 
@@ -136,7 +137,7 @@ public class AtualizarDadosPacienteBean implements Serializable {
             mensagem(FacesMessage.SEVERITY_WARN, "Dados inválidos", e.getMessage());
         } catch (Exception e) {
             mensagem(FacesMessage.SEVERITY_ERROR, "Erro ao registrar",
-                    "Não foi possível registrar a solicitação. Tente novamente.");
+                    e.getMessage());
         }
     }
 
@@ -149,6 +150,7 @@ public class AtualizarDadosPacienteBean implements Serializable {
                     formClinico.getTipoSanguineo(),
                     formClinico.getMotivo()
             );
+
             mensagem(FacesMessage.SEVERITY_INFO, "Solicitação registrada",
                     "Sua solicitação clínica foi enviada e aguarda análise.");
             formClinico = new AtualizacaoClinicaDTO();

@@ -1,5 +1,6 @@
 package br.com.hsg.domain.entity;
 
+import br.com.hsg.domain.utils.StringUtils;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -60,6 +61,9 @@ public class Endereco {
 
     public static Endereco criar(Paciente paciente, String logradouro, String numero,
             String complemento, String bairro, String cidade, String estado, String cep) {
+
+        validar(logradouro, numero, bairro, estado, cep);
+
         Endereco e = new Endereco();
         e.paciente    = paciente;
         e.logradouro  = logradouro;
@@ -75,6 +79,8 @@ public class Endereco {
 
     public void atualizar(String logradouro, String numero, String complemento,
             String bairro, String cidade, String estado, String cep) {
+        validar(logradouro, numero, bairro, estado, cep);
+
         this.logradouro  = logradouro;
         this.numero      = numero;
         this.complemento = complemento;
@@ -83,5 +89,41 @@ public class Endereco {
         this.estado      = estado;
         this.cep         = cep;
         this.dataUltimaAtualizacao = LocalDateTime.now();
+    }
+
+    public static void validar(
+            String logradouro,
+            String numero,
+            String bairro,
+            String estado,
+            String cep
+    ){
+        StringBuilder msg = new StringBuilder();
+
+        if(StringUtils.isNullOrEmpty(logradouro)){
+            msg.append("Logradouro é obrigatório; ");
+        }
+
+        if(StringUtils.isNullOrEmpty(numero)){
+            msg.append("Número é obrigatório; ");
+        }
+
+        if(StringUtils.isNullOrEmpty(bairro)){
+           msg.append("Bairro é obrigatório; ");
+        }
+
+        if(StringUtils.isNullOrEmpty(estado)){
+            msg.append("Estado é obrigatório; ");
+        }
+
+        if(StringUtils.isNullOrEmpty(cep)){
+            msg.append("CEP é obrigatório; ");
+        } else if(!cep.matches("^\\d{5}-\\d{3}$")){
+            msg.append("Formato do CEP inválido; ");
+        }
+
+        if (msg.length() > 0) {
+            throw new IllegalArgumentException(msg.toString());
+        }
     }
 }

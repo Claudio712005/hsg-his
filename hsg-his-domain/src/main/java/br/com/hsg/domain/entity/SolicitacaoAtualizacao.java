@@ -166,6 +166,7 @@ public class SolicitacaoAtualizacao {
             Telefone novoTelefone,
             String motivo
     ) {
+
         SolicitacaoAtualizacao s = base(paciente, motivo, TipoSolicitacao.CADASTRAL);
         s.nomeCompleto         = novoNome;
         s.email                = novoEmail;
@@ -183,6 +184,14 @@ public class SolicitacaoAtualizacao {
             String bairro, String cidade, String estado, String cep,
             String motivo
     ) {
+        Endereco.validar(
+                logradouro,
+                numero,
+                bairro,
+                estado,
+                cep
+        );
+
         SolicitacaoAtualizacao s = base(paciente, motivo, TipoSolicitacao.ENDERECO);
         s.logradouroProposto  = logradouro;
         s.numeroProposto      = numero;

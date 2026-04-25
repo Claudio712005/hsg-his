@@ -3,8 +3,8 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
-                xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui"
+                xmlns:pac="http://java.sun.com/jsf/composite/paciente"
                 template="/WEB-INF/templates/paciente/layout.xhtml">
 
     <ui:define name="title">HSG - Painel do Paciente</ui:define>
@@ -16,7 +16,6 @@
 
     <ui:define name="content">
         <h:form>
-
 
             <p:growl id="globalMsgs" showDetail="true" life="4000"/>
 
@@ -53,301 +52,16 @@
                 </h:panelGroup>
             </h:panelGroup>
 
-            <h:panelGroup layout="block" styleClass="panel">
-                <h:panelGroup layout="block" styleClass="panel-title">
-                    <h:outputText value="Resumo do Paciente"/>
-                    <h:panelGroup layout="block" styleClass="tools">
-                        <h:panelGroup layout="block" styleClass="tool-btn" title="Minimizar">
-                            <h:outputText value="&#8722;"/>
-                        </h:panelGroup>
-                    </h:panelGroup>
-                </h:panelGroup>
-
-                <h:panelGroup layout="block" styleClass="patient-head">
-                    <h:panelGroup layout="block" styleClass="photo">
-                        <h:outputText value="FOTO 3x4"/>
-                    </h:panelGroup>
-                    <h:panelGroup layout="block" styleClass="info">
-                        <h2>
-                            <h:outputText
-                                    value="#{painelPacienteBean.paciente != null ? painelPacienteBean.paciente.nomeCompleto : beanSessao.paciente.nomeCompleto}"/>
-                        </h2>
-                        <h:panelGroup layout="block" styleClass="line">
-                            <b><h:outputText value="Prontuário:"/></b>
-                            <h:outputText value=" #{painelPacienteBean.prontuario} &#183; "/>
-                            <b><h:outputText value="Idade:"/></b>
-                            <h:outputText value=" #{painelPacienteBean.idade} anos"/>
-                        </h:panelGroup>
-                        <h:panelGroup layout="block" styleClass="line">
-                            <b><h:outputText value="E-mail:"/></b>
-                            <h:outputText
-                                    value=" #{painelPacienteBean.paciente != null ? painelPacienteBean.paciente.email : beanSessao.paciente.email}"/>
-                        </h:panelGroup>
-                        <h:panelGroup layout="block" styleClass="line" style="margin-top:4px;">
-                            <h:outputText value="#{painelPacienteBean.statusDescricao}"
-                                          styleClass="chip #{painelPacienteBean.statusCssClass}"/>
-                        </h:panelGroup>
-                    </h:panelGroup>
-                    <h:panelGroup layout="block" styleClass="right">
-                        <h:panelGroup layout="block" styleClass="big">
-                            <h:outputText value="#{painelPacienteBean.prontuario}"/>
-                        </h:panelGroup>
-                        <h:panelGroup layout="block" styleClass="small">
-                            <h:outputText value="Cartão do Paciente &#183; HSG"/>
-                        </h:panelGroup>
-                    </h:panelGroup>
-                </h:panelGroup>
-
-                <h:panelGroup layout="block" styleClass="kv">
-                    <h:panelGroup layout="block" styleClass="k">
-                        <h:outputText value="Nome Completo"/>
-                    </h:panelGroup>
-                    <h:panelGroup layout="block" styleClass="v">
-                        <h:outputText
-                                value="#{painelPacienteBean.paciente != null ? painelPacienteBean.paciente.nomeCompleto : beanSessao.paciente.nomeCompleto}"/>
-                    </h:panelGroup>
-
-                    <h:panelGroup layout="block" styleClass="k">
-                        <h:outputText value="CPF"/>
-                    </h:panelGroup>
-                    <h:panelGroup layout="block" styleClass="v mono">
-                        <h:outputText value="***.***.***.** "/>
-                        <h:outputText value="(protegido)" styleClass="muted"/>
-                    </h:panelGroup>
-
-                    <h:panelGroup layout="block" styleClass="k">
-                        <h:outputText value="Data de Nascimento"/>
-                    </h:panelGroup>
-                    <h:panelGroup layout="block" styleClass="v">
-                        <h:outputText value="#{painelPacienteBean.dataNascimentoFormatada}"/>
-                        <h:outputText value=" (#{painelPacienteBean.idade} anos)" styleClass="muted"/>
-                    </h:panelGroup>
-
-                    <h:panelGroup layout="block" styleClass="k">
-                        <h:outputText value="Telefone"/>
-                    </h:panelGroup>
-                    <h:panelGroup layout="block" styleClass="v mono">
-                        <h:outputText
-                                value="#{painelPacienteBean.paciente != null ? painelPacienteBean.paciente.telefone : '-'}"/>
-                    </h:panelGroup>
-
-                    <h:panelGroup layout="block" styleClass="k">
-                        <h:outputText value="E-mail"/>
-                    </h:panelGroup>
-                    <h:panelGroup layout="block" styleClass="v">
-                        <h:outputText
-                                value="#{painelPacienteBean.paciente != null ? painelPacienteBean.paciente.email : beanSessao.paciente.email}"/>
-                    </h:panelGroup>
-
-                    <h:panelGroup layout="block" styleClass="k">
-                        <h:outputText value="Status"/>
-                    </h:panelGroup>
-                    <h:panelGroup layout="block" styleClass="v">
-                        <h:outputText value="#{painelPacienteBean.statusDescricao}"
-                                      styleClass="chip #{painelPacienteBean.statusCssClass}"/>
-                    </h:panelGroup>
-
-                    <h:panelGroup layout="block" styleClass="k">
-                        <h:outputText value="Usuário do Sistema"/>
-                    </h:panelGroup>
-                    <h:panelGroup layout="block" styleClass="v mono">
-                        <h:outputText value="#{beanSessao.paciente.username}"/>
-                    </h:panelGroup>
-
-                    <h:panelGroup layout="block" styleClass="k">
-                        <h:outputText value="Cadastrado em"/>
-                    </h:panelGroup>
-                    <h:panelGroup layout="block" styleClass="v">
-                        <h:outputText value="#{painelPacienteBean.dataCadastroFormatada}"/>
-                    </h:panelGroup>
-                </h:panelGroup>
-
-                <h:panelGroup layout="block" styleClass="note">
-                    <h:outputText
-                            value="Os dados pessoais são gerenciados pelo sistema HSG. CPF e documentos são armazenados de forma criptografada conforme a LGPD."/>
-                </h:panelGroup>
-            </h:panelGroup>
+            <pac:card-resumo bean="#{painelPacienteBean}" sessao="#{beanSessao}"/>
 
             <h:panelGroup layout="block" styleClass="grid-2-asym">
-
-                <h:panelGroup layout="block" styleClass="panel">
-                    <h:panelGroup layout="block" styleClass="panel-title">
-                        <h:outputText value="Últimas Medições"/>
-                        <h:panelGroup layout="block" styleClass="tools">
-                            <h:panelGroup layout="block" styleClass="tool-btn" title="Minimizar">
-                                <h:outputText value="&#8722;"/>
-                            </h:panelGroup>
-                        </h:panelGroup>
-                    </h:panelGroup>
-
-                    <p:outputPanel rendered="#{painelPacienteBean.ultimaMedicao != null}">
-                        <h:panelGroup layout="block" styleClass="panel-body">
-                            <h:panelGroup layout="block" styleClass="fin-box">
-                                <h:panelGroup layout="block">
-                                    <h:panelGroup layout="block" styleClass="lbl">
-                                        <h:outputText value="Peso"/>
-                                    </h:panelGroup>
-                                    <h:panelGroup layout="block" styleClass="val">
-                                        <h:outputText value="#{painelPacienteBean.ultimaMedicao.peso} kg"/>
-                                    </h:panelGroup>
-                                </h:panelGroup>
-                                <h:panelGroup layout="block" styleClass="sep-v"/>
-                                <h:panelGroup layout="block">
-                                    <h:panelGroup layout="block" styleClass="lbl">
-                                        <h:outputText value="Altura"/>
-                                    </h:panelGroup>
-                                    <h:panelGroup layout="block" styleClass="val">
-                                        <h:outputText value="#{painelPacienteBean.ultimaMedicao.altura} m"/>
-                                    </h:panelGroup>
-                                </h:panelGroup>
-                                <h:panelGroup layout="block" styleClass="sep-v"/>
-                                <h:panelGroup layout="block">
-                                    <h:panelGroup layout="block" styleClass="lbl">
-                                        <h:outputText value="Data da Medição"/>
-                                    </h:panelGroup>
-                                    <h:panelGroup layout="block" styleClass="val" style="font-size:12px;">
-                                        <h:outputText value="#{painelPacienteBean.ultimaMedicaoFormatada}"/>
-                                    </h:panelGroup>
-                                </h:panelGroup>
-                            </h:panelGroup>
-                        </h:panelGroup>
-                    </p:outputPanel>
-
-                    <p:outputPanel rendered="#{painelPacienteBean.ultimaMedicao == null}">
-                        <h:panelGroup layout="block" styleClass="empty-state">
-                            <h:panelGroup layout="block" styleClass="empty-icon">
-                                <h:outputText value="&#9678;"/>
-                            </h:panelGroup>
-                            <h:outputText value="Nenhuma medição registrada no sistema."/>
-                        </h:panelGroup>
-                    </p:outputPanel>
-
-                    <h:panelGroup layout="block" styleClass="note">
-                        <h:outputText value="Medições clínicas registradas pela equipe de enfermagem."/>
-                    </h:panelGroup>
-                </h:panelGroup>
-
-                <h:panelGroup layout="block" styleClass="panel">
-                    <h:panelGroup layout="block" styleClass="panel-title">
-                        <h:outputText value="Ações Rápidas"/>
-                    </h:panelGroup>
-                    <h:panelGroup layout="block" styleClass="panel-body">
-                        <h:panelGroup layout="block" styleClass="actions-row" style="flex-direction:column;">
-                            <h:panelGroup layout="block" styleClass="action-card">
-                                <h:panelGroup layout="block" styleClass="ic">
-                                    <h:outputText value="&#9998;"/>
-                                </h:panelGroup>
-                                <h:panelGroup layout="block" styleClass="txt">
-                                    <h:panelGroup layout="block" styleClass="t">
-                                        <h:outputText value="Atualizar Dados"/>
-                                    </h:panelGroup>
-                                    <h:panelGroup layout="block" styleClass="d">
-                                        <h:outputText value="Revisar cadastro, endereço e contatos."/>
-                                    </h:panelGroup>
-                                </h:panelGroup>
-                            </h:panelGroup>
-                            <h:panelGroup layout="block" styleClass="action-card">
-                                <h:panelGroup layout="block" styleClass="ic">+</h:panelGroup>
-                                <h:panelGroup layout="block" styleClass="txt">
-                                    <h:panelGroup layout="block" styleClass="t">
-                                        <h:outputText value="Solicitar Agendamento"/>
-                                    </h:panelGroup>
-                                    <h:panelGroup layout="block" styleClass="d">
-                                        <h:outputText value="Abrir pedido de nova consulta por especialidade."/>
-                                    </h:panelGroup>
-                                </h:panelGroup>
-                            </h:panelGroup>
-                            <h:panelGroup layout="block" styleClass="action-card">
-                                <h:panelGroup layout="block" styleClass="ic">
-                                    <h:outputText value="&#128196;"/>
-                                </h:panelGroup>
-                                <h:panelGroup layout="block" styleClass="txt">
-                                    <h:panelGroup layout="block" styleClass="t">
-                                        <h:outputText value="Visualizar Histórico Completo"/>
-                                    </h:panelGroup>
-                                    <h:panelGroup layout="block" styleClass="d">
-                                        <h:outputText value="Consultas, exames, internações e prescrições."/>
-                                    </h:panelGroup>
-                                </h:panelGroup>
-                            </h:panelGroup>
-                        </h:panelGroup>
-                        <h:panelGroup layout="block"
-                                      style="display:flex; gap:6px; margin-top:8px; padding-top:8px; border-top:1px solid #e4e4e4;">
-                            <h:commandButton styleClass="btn primary btn-big"
-                                             action="/paciente/atualizarInfos?faces-redirect=true"
-                                             value="Atualizar Dados"/>
-                            <p:commandButton styleClass="btn btn-big"
-                                             value="Agendar Consulta"
-                                             disabled="true"/>
-                            <p:commandButton styleClass="btn btn-big"
-                                             value="Histórico"
-                                             disabled="true"/>
-                        </h:panelGroup>
-                    </h:panelGroup>
-                </h:panelGroup>
-
+                <pac:ultima-medicao bean="#{painelPacienteBean}"/>
+                <pac:acoes-rapidas  bean="#{painelPacienteBean}"/>
             </h:panelGroup>
 
-            <h:panelGroup layout="block" styleClass="panel">
-                <h:panelGroup layout="block" styleClass="panel-title">
-                    <h:outputText value="Próximas Consultas"/>
-                    <h:panelGroup layout="block" styleClass="tools">
-                        <h:panelGroup layout="block" styleClass="tool-btn" title="Minimizar">
-                            <h:outputText value="&#8722;"/>
-                        </h:panelGroup>
-                    </h:panelGroup>
-                </h:panelGroup>
-                <p:dataTable var="consulta"
-                             value="#{[]}"
-                             styleClass="data"
-                             emptyMessage="Nenhuma consulta agendada disponível no momento.">
-                    <p:column headerText="Data / Hora">
-                        <h:outputText value="#{consulta.dataHora}"/>
-                    </p:column>
-                    <p:column headerText="Médico">
-                        <h:outputText value="#{consulta.medico}"/>
-                    </p:column>
-                    <p:column headerText="Especialidade">
-                        <h:outputText value="#{consulta.especialidade}"/>
-                    </p:column>
-                    <p:column headerText="Status" styleClass="center-align">
-                        <h:outputText value="#{consulta.status}"/>
-                    </p:column>
-                    <p:column headerText="Ações" styleClass="center-align"/>
-                </p:dataTable>
-                <h:panelGroup layout="block" styleClass="note">
-                    <h:outputText value="O módulo de agendamento de consultas estará disponível em breve."/>
-                </h:panelGroup>
-            </h:panelGroup>
+            <ui:include src="/paciente/fragments/tabela-consultas.xhtml"/>
+            <ui:include src="/paciente/fragments/tabela-exames.xhtml"/>
 
-            <h:panelGroup layout="block" styleClass="panel">
-                <h:panelGroup layout="block" styleClass="panel-title">
-                    <h:outputText value="Exames Recentes"/>
-                    <h:panelGroup layout="block" styleClass="tools">
-                        <h:panelGroup layout="block" styleClass="tool-btn" title="Minimizar">
-                            <h:outputText value="&#8722;"/>
-                        </h:panelGroup>
-                    </h:panelGroup>
-                </h:panelGroup>
-                <p:dataTable var="exame"
-                             value="#{[]}"
-                             styleClass="data"
-                             emptyMessage="Nenhum exame registrado disponível no momento.">
-                    <p:column headerText="Tipo de Exame">
-                        <h:outputText value="#{exame.tipoExame}"/>
-                    </p:column>
-                    <p:column headerText="Data">
-                        <h:outputText value="#{exame.data}"/>
-                    </p:column>
-                    <p:column headerText="Resultado" styleClass="center-align">
-                        <h:outputText value="#{exame.resultado}"/>
-                    </p:column>
-                    <p:column headerText="Ação" styleClass="center-align"/>
-                </p:dataTable>
-                <h:panelGroup layout="block" styleClass="note">
-                    <h:outputText value="O módulo de resultados de exames estará disponível em breve."/>
-                </h:panelGroup>
-            </h:panelGroup>
         </h:form>
     </ui:define>
 
