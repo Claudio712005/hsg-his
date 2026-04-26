@@ -22,9 +22,19 @@ public class SolicitacaoAtualizacaoDTO implements Serializable {
     private String snapshotTelefone;
 
     private String logradouroProposto;
+    private String numeroProposto;
+    private String complementoProposto;
+    private String bairroProposto;
     private String cidadeProposta;
+    private String estadoProposto;
+    private String cepProposto;
     private String snapshotLogradouro;
+    private String snapshotNumero;
+    private String snapshotComplemento;
+    private String snapshotBairro;
     private String snapshotCidade;
+    private String snapshotEstado;
+    private String snapshotCep;
 
     private String pesoProposto;
     private String alturaProposta;
@@ -37,4 +47,9 @@ public class SolicitacaoAtualizacaoDTO implements Serializable {
     private String statusDescricao;
     private String statusCssClass;
     private String enfermeiro;
+
+    private String motivoCancelamento;
+    private String dataCancelamento;
+    private String tipoCancelador;
+    private boolean cancelavel;
 }

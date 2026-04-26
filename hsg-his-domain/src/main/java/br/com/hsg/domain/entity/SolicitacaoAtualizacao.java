@@ -1,7 +1,10 @@
 package br.com.hsg.domain.entity;
 
+import br.com.hsg.domain.enums.Estado;
 import br.com.hsg.domain.enums.StatusSolicitacao;
+import br.com.hsg.domain.enums.TipoCancelador;
 import br.com.hsg.domain.enums.TipoSolicitacao;
+import br.com.hsg.domain.vo.DataNascimento;
 import br.com.hsg.domain.vo.Email;
 import br.com.hsg.domain.vo.NomeCompleto;
 import br.com.hsg.domain.vo.Telefone;
@@ -157,6 +160,23 @@ public class SolicitacaoAtualizacao {
     @JoinColumn(name = "ID_ENFER")
     private Enfermeiro enfermeiro;
 
+    @Getter
+    @Column(name = "DS_MOT_CANCEL", length = 500)
+    private String motivoCancelamento;
+
+    @Getter
+    @Column(name = "ID_CANCELADOR")
+    private Long idCancelador;
+
+    @Getter
+    @Enumerated(EnumType.STRING)
+    @Column(name = "TP_CANCELADOR", length = 10)
+    private TipoCancelador tipoCancelador;
+
+    @Getter
+    @Column(name = "DT_CANCELAMENTO")
+    private LocalDateTime dataCancelamento;
+
     protected SolicitacaoAtualizacao() {}
 
     public static SolicitacaoAtualizacao solicitarCadastral(
@@ -166,6 +186,12 @@ public class SolicitacaoAtualizacao {
             Telefone novoTelefone,
             String motivo
     ) {
+        Paciente.validar(
+                novoNome,
+                novoEmail,
+                new DataNascimento(paciente.getDataNascimento()),
+                novoTelefone
+        );
 
         SolicitacaoAtualizacao s = base(paciente, motivo, TipoSolicitacao.CADASTRAL);
         s.nomeCompleto         = novoNome;
@@ -181,7 +207,7 @@ public class SolicitacaoAtualizacao {
             Paciente paciente,
             Endereco enderecoAtual,
             String logradouro, String numero, String complemento,
-            String bairro, String cidade, String estado, String cep,
+            String bairro, String cidade, Estado estado, String cep,
             String motivo
     ) {
         Endereco.validar(
@@ -198,7 +224,7 @@ public class SolicitacaoAtualizacao {
         s.complementoProposto = complemento;
         s.bairroProposto      = bairro;
         s.cidadeProposta      = cidade;
-        s.estadoProposto      = estado;
+        s.estadoProposto      = estado != null ? estado.getSigla() : null;
         s.cepProposto         = cep;
         if (enderecoAtual != null) {
             s.snapshotLogradouro  = enderecoAtual.getLogradouro();
@@ -206,7 +232,7 @@ public class SolicitacaoAtualizacao {
             s.snapshotComplemento = enderecoAtual.getComplemento();
             s.snapshotBairro      = enderecoAtual.getBairro();
             s.snapshotCidade      = enderecoAtual.getCidade();
-            s.snapshotEstado      = enderecoAtual.getEstado();
+            s.snapshotEstado      = enderecoAtual.getEstado() != null ? enderecoAtual.getEstado().getSigla() : null;
             s.snapshotCep         = enderecoAtual.getCep();
         }
         return s;
@@ -218,6 +244,11 @@ public class SolicitacaoAtualizacao {
             Double pesoProposto, Double alturaProposta, String tipoSanguineoProposto,
             String motivo
     ) {
+        Paciente.validarDadosClinicos(
+                pesoProposto, alturaProposta, tipoSanguineoProposto,
+                motivo
+        );
+
         SolicitacaoAtualizacao s = base(paciente, motivo, TipoSolicitacao.CLINICO);
         s.pesoProposto          = pesoProposto;
         s.alturaProposta        = alturaProposta;
@@ -226,6 +257,21 @@ public class SolicitacaoAtualizacao {
         s.snapshotAltura        = snapshotAltura;
         s.snapshotTipoSanguineo = snapshotTipoSang;
         return s;
+    }
+
+    public void cancelar(Long idCancelador, TipoCancelador tipoCancelador, String motivoCancelamento) {
+        if (this.status != StatusSolicitacao.P) {
+            throw new IllegalStateException("Apenas solicitações pendentes podem ser canceladas.");
+        }
+        if (motivoCancelamento == null || motivoCancelamento.trim().isEmpty()) {
+            throw new IllegalArgumentException("Motivo do cancelamento é obrigatório.");
+        }
+        this.status                = StatusSolicitacao.C;
+        this.idCancelador          = idCancelador;
+        this.tipoCancelador        = tipoCancelador;
+        this.motivoCancelamento    = motivoCancelamento.trim();
+        this.dataCancelamento      = LocalDateTime.now();
+        this.dataUltimaAtualizacao = LocalDateTime.now();
     }
 
     private static SolicitacaoAtualizacao base(Paciente paciente, String motivo, TipoSolicitacao tipo) {

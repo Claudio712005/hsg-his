@@ -1,5 +1,6 @@
 package br.com.hsg.domain.entity;
 
+import br.com.hsg.domain.enums.Estado;
 import br.com.hsg.domain.utils.StringUtils;
 import lombok.Getter;
 
@@ -42,8 +43,9 @@ public class Endereco {
     private String cidade;
 
     @Getter
+    @Enumerated(EnumType.STRING)
     @Column(name = "SG_ESTADO", length = 2)
-    private String estado;
+    private Estado estado;
 
     @Getter
     @Column(name = "NR_CEP", length = 8)
@@ -60,34 +62,34 @@ public class Endereco {
     protected Endereco() {}
 
     public static Endereco criar(Paciente paciente, String logradouro, String numero,
-            String complemento, String bairro, String cidade, String estado, String cep) {
+            String complemento, String bairro, String cidade, Estado estado, String cep) {
 
         validar(logradouro, numero, bairro, estado, cep);
 
         Endereco e = new Endereco();
-        e.paciente    = paciente;
-        e.logradouro  = logradouro;
-        e.numero      = numero;
-        e.complemento = complemento;
-        e.bairro      = bairro;
-        e.cidade      = cidade;
-        e.estado      = estado;
-        e.cep         = cep;
+        e.paciente     = paciente;
+        e.logradouro   = logradouro;
+        e.numero       = numero;
+        e.complemento  = complemento;
+        e.bairro       = bairro;
+        e.cidade       = cidade;
+        e.estado       = estado;
+        e.cep          = cep;
         e.dataCadastro = LocalDateTime.now();
         return e;
     }
 
     public void atualizar(String logradouro, String numero, String complemento,
-            String bairro, String cidade, String estado, String cep) {
+            String bairro, String cidade, Estado estado, String cep) {
         validar(logradouro, numero, bairro, estado, cep);
 
-        this.logradouro  = logradouro;
-        this.numero      = numero;
-        this.complemento = complemento;
-        this.bairro      = bairro;
-        this.cidade      = cidade;
-        this.estado      = estado;
-        this.cep         = cep;
+        this.logradouro            = logradouro;
+        this.numero                = numero;
+        this.complemento           = complemento;
+        this.bairro                = bairro;
+        this.cidade                = cidade;
+        this.estado                = estado;
+        this.cep                   = cep;
         this.dataUltimaAtualizacao = LocalDateTime.now();
     }
 
@@ -95,31 +97,25 @@ public class Endereco {
             String logradouro,
             String numero,
             String bairro,
-            String estado,
+            Estado estado,
             String cep
-    ){
+    ) {
         StringBuilder msg = new StringBuilder();
 
-        if(StringUtils.isNullOrEmpty(logradouro)){
+        if (StringUtils.isNullOrEmpty(logradouro)) {
             msg.append("Logradouro é obrigatório; ");
         }
-
-        if(StringUtils.isNullOrEmpty(numero)){
+        if (StringUtils.isNullOrEmpty(numero)) {
             msg.append("Número é obrigatório; ");
         }
-
-        if(StringUtils.isNullOrEmpty(bairro)){
-           msg.append("Bairro é obrigatório; ");
+        if (StringUtils.isNullOrEmpty(bairro)) {
+            msg.append("Bairro é obrigatório; ");
         }
-
-        if(StringUtils.isNullOrEmpty(estado)){
+        if (estado == null) {
             msg.append("Estado é obrigatório; ");
         }
-
-        if(StringUtils.isNullOrEmpty(cep)){
+        if (StringUtils.isNullOrEmpty(cep)) {
             msg.append("CEP é obrigatório; ");
-        } else if(!cep.matches("^\\d{5}-\\d{3}$")){
-            msg.append("Formato do CEP inválido; ");
         }
 
         if (msg.length() > 0) {

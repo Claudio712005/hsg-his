@@ -21,6 +21,24 @@ public class SolicitacaoAtualizacaoDAO {
         return solicitacao;
     }
 
+    public SolicitacaoAtualizacao atualizar(SolicitacaoAtualizacao solicitacao) {
+        SolicitacaoAtualizacao merged = em.merge(solicitacao);
+        em.flush();
+        return merged;
+    }
+
+    public SolicitacaoAtualizacao buscarPorId(Long id) {
+        try {
+            return em.createQuery(
+                    "SELECT s FROM SolicitacaoAtualizacao s WHERE s.id = :id",
+                    SolicitacaoAtualizacao.class)
+                    .setParameter("id", id)
+                    .getSingleResult();
+        } catch (javax.persistence.NoResultException e) {
+            return null;
+        }
+    }
+
     public List<SolicitacaoAtualizacao> buscarPorPaciente(
             Long pacienteId, int inicio, int tamanho, List<TipoSolicitacao> tipos) {
 

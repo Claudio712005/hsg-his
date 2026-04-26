@@ -21,14 +21,19 @@
                 <h:outputText value="Informe os valores atuais de peso, altura e tipo sanguíneo. A atualização só é efetivada após aprovação da equipe de enfermagem."/>
             </h:panelGroup>
 
-            <h:panelGroup layout="block" styleClass="kv" >
+            <h:panelGroup layout="block" styleClass="kv">
 
                 <h:panelGroup layout="block" styleClass="k"><h:outputText value="Peso (kg)"/></h:panelGroup>
                 <h:panelGroup layout="block" styleClass="v">
                     <p:inputText id="peso"
                                  value="#{cc.attrs.bean.formClinico.peso}"
+                                 converterMessage="Informe um número válido para o peso (ex: 72.5)."
+                                 validatorMessage="Peso deve estar no formato correto (ex: 72.5)."
                                  styleClass="input-field mono" style="width:140px;"
-                                 placeholder="Ex: 72.5"/>
+                                 placeholder="Ex: 72.5">
+                        <f:validateRegex pattern="\d{1,3}([.,]\d{1,2})?"/>
+                        <p:ajax event="change" process="@this" update="btnClinico"/>
+                    </p:inputText>
                     <p:message for="peso" styleClass="field-error"/>
                 </h:panelGroup>
 
@@ -36,8 +41,13 @@
                 <h:panelGroup layout="block" styleClass="v">
                     <p:inputText id="altura"
                                  value="#{cc.attrs.bean.formClinico.altura}"
+                                 converterMessage="Informe um número válido para a altura (ex: 1.75)."
+                                 validatorMessage="Altura deve estar no formato correto (ex: 1.75)."
                                  styleClass="input-field mono" style="width:140px;"
-                                 placeholder="Ex: 1.75"/>
+                                 placeholder="Ex: 1.75">
+                        <f:validateRegex pattern="\d([.,]\d{1,2})?"/>
+                        <p:ajax event="change" process="@this" update="btnClinico"/>
+                    </p:inputText>
                     <p:message for="altura" styleClass="field-error"/>
                 </h:panelGroup>
 
@@ -46,6 +56,7 @@
                     <p:selectOneMenu id="tipoSanguineo"
                                      value="#{cc.attrs.bean.formClinico.tipoSanguineo}"
                                      styleClass="input-field" style="width:200px;">
+                        <p:ajax event="change" process="@this" update="btnClinico"/>
                         <f:selectItem itemLabel="Selecione..." itemValue="#{null}" noSelectionOption="true"/>
                         <f:selectItems value="#{cc.attrs.bean.tiposSanguineos}"
                                        var="ts"
@@ -70,10 +81,12 @@
 
             <h:panelGroup layout="block"
                           style="margin-top:20px; padding-top:14px; border-top:1px solid #e4e4e4; display:flex; gap:8px; align-items:center;">
-                <p:commandButton value="Solicitar Atualização Clínica"
+                <p:commandButton id="btnClinico"
+                                 value="Solicitar Atualização Clínica"
                                  action="#{cc.attrs.bean.solicitarAtualizacaoClinica}"
                                  process="panelClinico"
                                  update=":mainForm:msgs @form"
+                                 disabled="#{not cc.attrs.bean.formClinicoAlterado}"
                                  styleClass="btn primary btn-big"
                                  icon="pi pi-heart"/>
             </h:panelGroup>

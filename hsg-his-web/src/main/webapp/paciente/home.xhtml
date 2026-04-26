@@ -3,7 +3,6 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
-                xmlns:p="http://primefaces.org/ui"
                 xmlns:pac="http://java.sun.com/jsf/composite/paciente"
                 template="/WEB-INF/templates/paciente/layout.xhtml">
 
@@ -16,8 +15,6 @@
 
     <ui:define name="content">
         <h:form>
-
-            <p:growl id="globalMsgs" showDetail="true" life="4000"/>
 
             <h:panelGroup layout="block" styleClass="page-title">
                 <h:panelGroup layout="block">
@@ -58,9 +55,6 @@
                 <pac:ultima-medicao bean="#{painelPacienteBean}"/>
                 <pac:acoes-rapidas  bean="#{painelPacienteBean}"/>
             </h:panelGroup>
-
-            <ui:include src="/paciente/fragments/tabela-consultas.xhtml"/>
-            <ui:include src="/paciente/fragments/tabela-exames.xhtml"/>
 
         </h:form>
     </ui:define>

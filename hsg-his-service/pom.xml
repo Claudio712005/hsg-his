@@ -15,20 +15,17 @@
 
     <dependencies>
 
-        <!-- Java EE 7 completo (provided pelo servidor de aplicação) -->
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-api</artifactId>
         </dependency>
 
-        <!-- Módulo de domínio -->
         <dependency>
             <groupId>br.com.hsg</groupId>
             <artifactId>hsg-his-domain</artifactId>
             <version>${project.version}</version>
         </dependency>
 
-        <!-- Testes -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

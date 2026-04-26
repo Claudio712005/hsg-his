@@ -3,6 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:cc="http://java.sun.com/jsf/composite"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui">
 
 <cc:interface>
@@ -20,7 +21,7 @@
                 <h:outputText value="Informe os dados que deseja atualizar. A alteração só é efetivada após aprovação da equipe de enfermagem."/>
             </h:panelGroup>
 
-            <h:panelGroup layout="block" styleClass="kv" >
+            <h:panelGroup layout="block" styleClass="kv">
 
                 <h:panelGroup layout="block" styleClass="k">
                     <h:outputText value="Primeiro Nome"/>
@@ -31,9 +32,13 @@
                                  value="#{cc.attrs.bean.formCadastral.primeiroNome}"
                                  required="true"
                                  requiredMessage="Primeiro nome é obrigatório."
+                                 validatorMessage="Nome deve ter entre 2 e 100 caracteres."
                                  maxlength="100"
                                  styleClass="input-field"
-                                 style="width:100%;"/>
+                                 style="width:100%;">
+                        <f:validateLength minimum="2" maximum="100"/>
+                        <p:ajax event="change" process="@this" update="btnCadastral"/>
+                    </p:inputText>
                     <p:message for="primeiroNome" styleClass="field-error"/>
                 </h:panelGroup>
 
@@ -46,9 +51,13 @@
                                  value="#{cc.attrs.bean.formCadastral.sobrenome}"
                                  required="true"
                                  requiredMessage="Sobrenome é obrigatório."
+                                 validatorMessage="Sobrenome deve ter entre 2 e 150 caracteres."
                                  maxlength="150"
                                  styleClass="input-field"
-                                 style="width:100%;"/>
+                                 style="width:100%;">
+                        <f:validateLength minimum="2" maximum="150"/>
+                        <p:ajax event="change" process="@this" update="btnCadastral"/>
+                    </p:inputText>
                     <p:message for="sobrenome" styleClass="field-error"/>
                 </h:panelGroup>
 
@@ -61,9 +70,13 @@
                                  value="#{cc.attrs.bean.formCadastral.email}"
                                  required="true"
                                  requiredMessage="E-mail é obrigatório."
+                                 validatorMessage="Informe um e-mail válido (ex: usuario@dominio.com)."
                                  maxlength="255"
                                  styleClass="input-field"
-                                 style="width:100%;"/>
+                                 style="width:100%;">
+                        <f:validateRegex pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}"/>
+                        <p:ajax event="change" process="@this" update="btnCadastral"/>
+                    </p:inputText>
                     <p:message for="emailCad" styleClass="field-error"/>
                 </h:panelGroup>
 
@@ -74,10 +87,14 @@
                 <h:panelGroup layout="block" styleClass="v">
                     <p:inputText id="telefoneCad"
                                  value="#{cc.attrs.bean.formCadastral.telefone}"
+                                 validatorMessage="Telefone deve ter entre 10 e 20 dígitos."
                                  maxlength="20"
                                  styleClass="input-field mono"
                                  style="width:100%;"
-                                 placeholder="Ex: 11987654321"/>
+                                 placeholder="Ex: 11987654321">
+                        <f:validateLength minimum="10" maximum="20"/>
+                        <p:ajax event="change" process="@this" update="btnCadastral"/>
+                    </p:inputText>
                     <p:message for="telefoneCad" styleClass="field-error"/>
                 </h:panelGroup>
 
@@ -99,10 +116,12 @@
 
             <h:panelGroup layout="block"
                           style="margin-top:20px; padding-top:14px; border-top:1px solid #e4e4e4; display:flex; gap:8px; align-items:center;">
-                <p:commandButton value="Solicitar Atualização Cadastral"
+                <p:commandButton id="btnCadastral"
+                                 value="Solicitar Atualização Cadastral"
                                  action="#{cc.attrs.bean.solicitarAtualizacaoCadastral}"
                                  process="panelCadastral"
                                  update=":mainForm:msgs @form"
+                                 disabled="#{not cc.attrs.bean.formCadastralAlterado}"
                                  styleClass="btn primary btn-big"
                                  icon="pi pi-send"/>
             </h:panelGroup>

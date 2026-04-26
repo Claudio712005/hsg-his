@@ -1,5 +1,6 @@
 package br.com.hsg.web.dto.form;
 
+import br.com.hsg.domain.enums.Estado;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -14,7 +15,7 @@ public class AtualizacaoEnderecoDTO implements Serializable {
     private String complemento;
     private String bairro;
     private String cidade;
-    private String estado;
+    private Estado estado;
     private String cep;
     private String motivo;
 }

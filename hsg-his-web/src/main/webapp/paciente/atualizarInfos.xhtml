@@ -17,22 +17,25 @@
     <ui:define name="content">
         <h:form id="mainForm">
 
-            <p:growl id="msgs" widgetVar="msgs" showDetail="true" life="6000"/>
+            <p:growl id="msgs" widgetVar="msgs" showDetail="true" life="6000" globalOnly="true"/>
 
             <p:tabView id="tabs" dynamic="false">
 
-                <p:tab title="Dados Cadastrais e Endereço">
+                <p:tab id="tabCadastral" title="Dados Cadastrais e Endereço">
                     <pac:form-cadastral id="formCadastral" bean="#{atualizarDadosPacienteBean}"/>
                     <pac:form-endereco  id="formEndereco"  bean="#{atualizarDadosPacienteBean}"/>
                     <ui:include src="/paciente/fragments/historico-cadastral.xhtml"/>
                 </p:tab>
 
-                <p:tab title="Dados Clínicos">
+                <p:tab id="tabClinico" title="Dados Clínicos">
                     <pac:form-clinico id="formClinico" bean="#{atualizarDadosPacienteBean}"/>
                     <ui:include src="/paciente/fragments/historico-clinico.xhtml"/>
                 </p:tab>
 
             </p:tabView>
+
+            <pac:dialogo-cancelamento id="dlgCancel" bean="#{atualizarDadosPacienteBean}"/>
+            <pac:dialogo-visualizacao id="dlgVisu"   bean="#{atualizarDadosPacienteBean}"/>
 
         </h:form>
     </ui:define>

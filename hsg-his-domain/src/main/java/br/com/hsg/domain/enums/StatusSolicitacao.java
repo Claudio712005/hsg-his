@@ -11,7 +11,8 @@ public enum StatusSolicitacao {
 
     P("Pendente"),
     A("Aprovada"),
-    R("Rejeitada");
+    R("Rejeitada"),
+    C("Cancelada");
 
     private String descricao;
 }

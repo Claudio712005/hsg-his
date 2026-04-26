@@ -57,6 +57,10 @@ public class HistoricoLazyModel extends LazyDataModel<SolicitacaoAtualizacaoDTO>
         dto.setStatusCssClass(cssStatus(s.getStatus()));
         dto.setMotivo(s.getMotivo() != null ? s.getMotivo() : "—");
         dto.setEnfermeiro(s.getEnfermeiro() != null ? s.getEnfermeiro().getNomeCompleto() : "Aguardando");
+        dto.setCancelavel(s.getStatus() == StatusSolicitacao.P);
+        dto.setMotivoCancelamento(s.getMotivoCancelamento());
+        dto.setTipoCancelador(s.getTipoCancelador() != null ? s.getTipoCancelador().name() : null);
+        dto.setDataCancelamento(s.getDataCancelamento() != null ? s.getDataCancelamento().format(FMT) : null);
 
         if (s.getTipoSolicitacao() == TipoSolicitacao.CADASTRAL) {
             dto.setNomePropostoCompleto(s.getNomeCompleto());
@@ -69,9 +73,19 @@ public class HistoricoLazyModel extends LazyDataModel<SolicitacaoAtualizacaoDTO>
 
         } else if (s.getTipoSolicitacao() == TipoSolicitacao.ENDERECO) {
             dto.setLogradouroProposto(nvl(s.getLogradouroProposto()));
+            dto.setNumeroProposto(nvl(s.getNumeroProposto()));
+            dto.setComplementoProposto(nvl(s.getComplementoProposto()));
+            dto.setBairroProposto(nvl(s.getBairroProposto()));
             dto.setCidadeProposta(nvl(s.getCidadeProposta()));
+            dto.setEstadoProposto(nvl(s.getEstadoProposto()));
+            dto.setCepProposto(nvl(s.getCepProposto()));
             dto.setSnapshotLogradouro(nvl(s.getSnapshotLogradouro()));
+            dto.setSnapshotNumero(nvl(s.getSnapshotNumero()));
+            dto.setSnapshotComplemento(nvl(s.getSnapshotComplemento()));
+            dto.setSnapshotBairro(nvl(s.getSnapshotBairro()));
             dto.setSnapshotCidade(nvl(s.getSnapshotCidade()));
+            dto.setSnapshotEstado(nvl(s.getSnapshotEstado()));
+            dto.setSnapshotCep(nvl(s.getSnapshotCep()));
             dto.setResumo(resumoEndereco(s));
 
         } else if (s.getTipoSolicitacao() == TipoSolicitacao.CLINICO) {
@@ -105,6 +119,7 @@ public class HistoricoLazyModel extends LazyDataModel<SolicitacaoAtualizacaoDTO>
         switch (status) {
             case A:  return "ativo";
             case R:  return "inativo";
+            case C:  return "cancelado";
             default: return "pendente";
         }
     }

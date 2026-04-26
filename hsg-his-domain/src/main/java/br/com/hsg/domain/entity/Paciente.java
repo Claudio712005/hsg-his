@@ -78,6 +78,7 @@ public class Paciente {
             Telefone telefone
     ){
         Paciente paciente = new Paciente();
+        validar(nome, email, dataNascimento, telefone);
 
         paciente.nome = nome;
         paciente.email = email;
@@ -86,6 +87,59 @@ public class Paciente {
         paciente.dataCadastro = LocalDateTime.now();
         paciente.status = IndicativoStatus.A;
         return paciente;
+    }
+
+    public static void validar(
+            NomeCompleto nome,
+            Email email,
+            DataNascimento dataNascimento,
+            Telefone telefone
+    ){
+        if(nome == null){
+            throw new IllegalArgumentException("O nome completo é obrigatório.");
+        }
+
+        if(email == null){
+            throw new IllegalArgumentException("O email é obrigatório.");
+        }
+
+        if(dataNascimento == null){
+            throw new IllegalArgumentException("A data de nascimento é obrigatória.");
+        }
+
+        if(telefone == null){
+            throw new IllegalArgumentException("O telefone é obrigatório.");
+        }
+
+    }
+
+    public static void validarDadosClinicos(
+            Double pesoProposto, Double alturaProposta, String tipoSanguineoProposto,
+            String motivo
+    ){
+        if(pesoProposto == null){
+            throw new IllegalArgumentException("O peso proposto é obrigatório.");
+        }
+
+        if(pesoProposto <= 0){
+            throw new IllegalArgumentException("O peso proposto deve ser um valor positivo.");
+        }
+
+        if(alturaProposta == null){
+            throw new IllegalArgumentException("A altura proposta é obrigatória.");
+        }
+
+        if(alturaProposta <= 0){
+            throw new IllegalArgumentException("A altura proposta deve ser um valor positivo.");
+        }
+
+        if(tipoSanguineoProposto == null || tipoSanguineoProposto.isEmpty()){
+            throw new IllegalArgumentException("O tipo sanguíneo proposto é obrigatório.");
+        }
+
+        if(motivo == null || motivo.isEmpty()){
+            throw new IllegalArgumentException("O motivo da alteração dos dados clínicos é obrigatório.");
+        }
     }
 
     public boolean podeLogar(){

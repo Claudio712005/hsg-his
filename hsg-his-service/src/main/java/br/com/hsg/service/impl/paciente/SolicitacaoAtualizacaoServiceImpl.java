@@ -9,6 +9,8 @@ import br.com.hsg.domain.entity.MedicaoPaciente;
 import br.com.hsg.domain.entity.Paciente;
 import br.com.hsg.domain.entity.SolicitacaoAtualizacao;
 import br.com.hsg.domain.entity.TipoSanguineo;
+import br.com.hsg.domain.enums.Estado;
+import br.com.hsg.domain.enums.TipoCancelador;
 import br.com.hsg.domain.enums.TipoSolicitacao;
 import br.com.hsg.domain.vo.Email;
 import br.com.hsg.domain.vo.NomeCompleto;
@@ -33,7 +35,7 @@ public class SolicitacaoAtualizacaoServiceImpl implements SolicitacaoAtualizacao
             String primeiroNome, String sobrenome,
             String email, String telefone,
             String motivo
-    ) {
+    )throws IllegalArgumentException {
         Paciente paciente = requererPaciente(pacienteId);
 
         NomeCompleto novoNome  = new NomeCompleto(primeiroNome.trim(), sobrenome.trim());
@@ -52,9 +54,9 @@ public class SolicitacaoAtualizacaoServiceImpl implements SolicitacaoAtualizacao
     public void solicitarAtualizacaoEndereco(
             Long pacienteId,
             String logradouro, String numero, String complemento,
-            String bairro, String cidade, String estado, String cep,
+            String bairro, String cidade, Estado estado, String cep,
             String motivo
-    ) {
+    ) throws IllegalArgumentException {
         Paciente paciente     = requererPaciente(pacienteId);
         Endereco enderecoAtual = enderecoDAO.buscarPorPaciente(pacienteId);
 
@@ -73,7 +75,7 @@ public class SolicitacaoAtualizacaoServiceImpl implements SolicitacaoAtualizacao
             Double peso, Double altura,
             String tipoSanguineo,
             String motivo
-    ) {
+    )throws IllegalArgumentException {
         Paciente        paciente  = requererPaciente(pacienteId);
         MedicaoPaciente medicao   = painelDAO.buscarUltimaMedicao(pacienteId);
         TipoSanguineo   tipoAtual = painelDAO.buscarUltimoTipoSanguineo(pacienteId);
@@ -91,6 +93,17 @@ public class SolicitacaoAtualizacaoServiceImpl implements SolicitacaoAtualizacao
                         motivo
                 )
         );
+    }
+
+    @Override
+    public void cancelarSolicitacao(Long solicitacaoId, Long idCancelador,
+            TipoCancelador tipoCancelador, String motivoCancelamento) {
+        SolicitacaoAtualizacao s = solicitacaoDAO.buscarPorId(solicitacaoId);
+        if (s == null) {
+            throw new IllegalArgumentException("Solicitação não encontrada.");
+        }
+        s.cancelar(idCancelador, tipoCancelador, motivoCancelamento);
+        solicitacaoDAO.atualizar(s);
     }
 
     @Override

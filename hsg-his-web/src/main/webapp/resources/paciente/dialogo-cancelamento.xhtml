@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://java.sun.com/jsf/composite"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<cc:interface>
+    <cc:attribute name="bean" required="true"/>
+</cc:interface>
+
+<cc:implementation>
+    <p:dialog id="dialog"
+              widgetVar="dlgCancelamento"
+              header="Cancelar Solicitação"
+              modal="true"
+              resizable="false"
+              width="480"
+              closeOnEscape="true">
+
+        <h:panelGroup id="body" layout="block" style="padding:4px 0 8px;">
+            <h:panelGroup layout="block" styleClass="note" style="margin-bottom:16px;">
+                <h:outputText value="Informe o motivo do cancelamento. Após confirmar, a solicitação não poderá ser reaberta."/>
+            </h:panelGroup>
+
+            <h:panelGroup layout="block" styleClass="kv">
+                <h:panelGroup layout="block" styleClass="k">
+                    <h:outputText value="Motivo"/>
+                    <h:outputText value=" *" style="color:#c00;"/>
+                </h:panelGroup>
+                <h:panelGroup layout="block" styleClass="v">
+                    <p:inputTextarea id="motivoCancel"
+                                     value="#{cc.attrs.bean.motivoCancelamento}"
+                                     required="true"
+                                     requiredMessage="Motivo é obrigatório."
+                                     maxlength="500"
+                                     rows="4"
+                                     styleClass="input-field"
+                                     style="width:100%; resize:vertical;"/>
+                    <p:message for="motivoCancel" styleClass="field-error"/>
+                </h:panelGroup>
+            </h:panelGroup>
+        </h:panelGroup>
+
+        <f:facet name="footer">
+            <p:commandButton value="Confirmar cancelamento"
+                             action="#{cc.attrs.bean.confirmarCancelamento}"
+                             process="body"
+                             update="@form:msgs body @form:tabs:tabCadastral:tabelaHistoricoCadastral @form:tabs:tabClinico:tabelaHistoricoClinico"
+                             styleClass="btn danger"
+                             oncomplete="if (!args.validationFailed) PF('dlgCancelamento').hide();"/>
+            <p:commandButton value="Voltar"
+                             type="button"
+                             onclick="PF('dlgCancelamento').hide();"
+                             styleClass="btn secondary"/>
+        </f:facet>
+    </p:dialog>
+</cc:implementation>
+</html>
