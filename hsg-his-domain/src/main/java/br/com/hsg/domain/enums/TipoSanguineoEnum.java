@@ -60,4 +60,23 @@ public enum TipoSanguineoEnum {
         }
         return false;
     }
+
+    public static TipoSanguineoEnum from(String valor) {
+        if (valor == null || valor.trim().isEmpty()) {
+            return null;
+        }
+
+        try {
+            return TipoSanguineoEnum.valueOf(valor.toUpperCase());
+        } catch (IllegalArgumentException ignored) {
+        }
+
+        for (TipoSanguineoEnum tipo : values()) {
+            if (tipo.getDescricao().equalsIgnoreCase(valor)) {
+                return tipo;
+            }
+        }
+
+        throw new IllegalArgumentException("Tipo sanguíneo inválido: " + valor);
+    }
 }

@@ -16,12 +16,15 @@
               header="Cancelar Solicitação"
               modal="true"
               resizable="false"
-              width="480"
-              closeOnEscape="true">
+              width="500"
+              closeOnEscape="true"
+              styleClass="dialog-cancelamento">
 
-        <h:panelGroup id="body" layout="block" style="padding:4px 0 8px;">
-            <h:panelGroup layout="block" styleClass="note" style="margin-bottom:16px;">
-                <h:outputText value="Informe o motivo do cancelamento. Após confirmar, a solicitação não poderá ser reaberta."/>
+        <!-- Always in DOM so AJAX can target it -->
+        <h:panelGroup id="body" layout="block">
+
+            <h:panelGroup layout="block" styleClass="note" style="margin-bottom:18px; color:#b00; background:#fff5f5; border:1px solid #fcc; padding:10px 14px; border-radius:4px;">
+                <h:outputText value="Esta ação não pode ser desfeita. Informe o motivo antes de confirmar."/>
             </h:panelGroup>
 
             <h:panelGroup layout="block" styleClass="kv">
@@ -33,7 +36,7 @@
                     <p:inputTextarea id="motivoCancel"
                                      value="#{cc.attrs.bean.motivoCancelamento}"
                                      required="true"
-                                     requiredMessage="Motivo é obrigatório."
+                                     requiredMessage="O motivo do cancelamento é obrigatório."
                                      maxlength="500"
                                      rows="4"
                                      styleClass="input-field"
@@ -41,16 +44,19 @@
                     <p:message for="motivoCancel" styleClass="field-error"/>
                 </h:panelGroup>
             </h:panelGroup>
+
         </h:panelGroup>
 
         <f:facet name="footer">
             <p:commandButton value="Confirmar cancelamento"
+                             icon="mi-icon ic-ban"
                              action="#{cc.attrs.bean.confirmarCancelamento}"
                              process="body"
-                             update="@form:msgs body @form:tabs:tabCadastral:tabelaHistoricoCadastral @form:tabs:tabClinico:tabelaHistoricoClinico"
+                             update=":mainForm:msgs body :mainForm:tabs:tabelaHistoricoCadastral :mainForm:tabs:tabelaHistoricoClinico"
                              styleClass="btn danger"
                              oncomplete="if (!args.validationFailed) PF('dlgCancelamento').hide();"/>
             <p:commandButton value="Voltar"
+                             icon="mi-icon ic-times"
                              type="button"
                              onclick="PF('dlgCancelamento').hide();"
                              styleClass="btn secondary"/>

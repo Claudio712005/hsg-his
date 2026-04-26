@@ -40,23 +40,23 @@
                 <h:outputText value="#{s.enfermeiro}"/>
             </p:column>
             <p:column headerText="Ações" style="width:80px;" styleClass="center-align">
-                <p:commandButton icon="pi pi-eye"
+                <p:commandButton icon="mi-icon ic-eye"
                                  title="Visualizar"
                                  styleClass="btn icon-btn"
                                  process="@none"
-                                 update=":mainForm:dlgVisu"
+                                 update=":mainForm:dlgVisu:body"
                                  oncomplete="PF('dlgVisualizacao').show();">
                     <f:setPropertyActionListener
                         target="#{atualizarDadosPacienteBean.solicitacaoVisualizacao}"
                         value="#{s}"/>
                 </p:commandButton>
-                <p:commandButton icon="pi pi-ban"
+                <p:commandButton icon="mi-icon ic-ban"
                                  title="Cancelar"
                                  rendered="#{s.cancelavel}"
                                  styleClass="btn icon-btn danger"
                                  action="#{atualizarDadosPacienteBean.prepararCancelamento(s.id)}"
                                  process="@none"
-                                 update=":mainForm:dlgCancel"
+                                 update=":mainForm:dlgCancel:body"
                                  oncomplete="PF('dlgCancelamento').show();"/>
             </p:column>
         </p:dataTable>

@@ -10,6 +10,7 @@ public class SolicitacaoAtualizacaoDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Long   id;
+    private String tipo;
     private String dataCadastro;
     private String tipoDescricao;
     private String resumo;

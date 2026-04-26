@@ -136,10 +136,6 @@ public class Paciente {
         if(tipoSanguineoProposto == null || tipoSanguineoProposto.isEmpty()){
             throw new IllegalArgumentException("O tipo sanguíneo proposto é obrigatório.");
         }
-
-        if(motivo == null || motivo.isEmpty()){
-            throw new IllegalArgumentException("O motivo da alteração dos dados clínicos é obrigatório.");
-        }
     }
 
     public boolean podeLogar(){

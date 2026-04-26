@@ -13,6 +13,7 @@ import br.com.hsg.web.dto.form.AtualizacaoEnderecoDTO;
 import br.com.hsg.web.dto.response.PacienteResponseDTO;
 import br.com.hsg.web.dto.response.SolicitacaoAtualizacaoDTO;
 import br.com.hsg.web.model.HistoricoLazyModel;
+import lombok.Getter;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -39,8 +40,11 @@ public class AtualizarDadosPacienteBean implements Serializable {
     @Inject
     private BeanSessao beanSessao;
 
+    @Getter
     private AtualizacaoCadastralDTO formCadastral;
+    @Getter
     private AtualizacaoEnderecoDTO  formEndereco;
+    @Getter
     private AtualizacaoClinicaDTO   formClinico;
 
     private String snpPrimeiroNome;
@@ -272,9 +276,9 @@ public class AtualizarDadosPacienteBean implements Serializable {
                 new FacesMessage(severidade, resumo, detalhe));
     }
 
-    public AtualizacaoCadastralDTO getFormCadastral() { return formCadastral; }
-    public AtualizacaoEnderecoDTO  getFormEndereco()  { return formEndereco; }
-    public AtualizacaoClinicaDTO   getFormClinico()   { return formClinico; }
+    public void selecionarSolicitacao(SolicitacaoAtualizacaoDTO solicitacao) {
+        this.solicitacaoVisualizacao = solicitacao;
+    }
 
     public HistoricoLazyModel getHistoricoCadastralModel() { return historicoCadastralModel; }
     public HistoricoLazyModel getHistoricoClinicoModel()   { return historicoClinicoModel; }

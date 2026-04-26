@@ -2,6 +2,7 @@ package br.com.hsg.web.model;
 
 import br.com.hsg.domain.entity.SolicitacaoAtualizacao;
 import br.com.hsg.domain.enums.StatusSolicitacao;
+import br.com.hsg.domain.enums.TipoSanguineoEnum;
 import br.com.hsg.domain.enums.TipoSolicitacao;
 import br.com.hsg.service.facade.paciente.SolicitacaoAtualizacaoServiceFacade;
 import br.com.hsg.web.dto.response.SolicitacaoAtualizacaoDTO;
@@ -24,16 +25,16 @@ public class HistoricoLazyModel extends LazyDataModel<SolicitacaoAtualizacaoDTO>
     private final List<TipoSolicitacao> tiposFiltro;
 
     public HistoricoLazyModel(SolicitacaoAtualizacaoServiceFacade service,
-                               Long pacienteId,
-                               List<TipoSolicitacao> tiposFiltro) {
-        this.service     = service;
-        this.pacienteId  = pacienteId;
+                              Long pacienteId,
+                              List<TipoSolicitacao> tiposFiltro) {
+        this.service = service;
+        this.pacienteId = pacienteId;
         this.tiposFiltro = tiposFiltro;
     }
 
     @Override
     public List<SolicitacaoAtualizacaoDTO> load(int first, int pageSize,
-            String sortField, SortOrder sortOrder, Map<String, Object> filters) {
+                                                String sortField, SortOrder sortOrder, Map<String, Object> filters) {
 
         if (pacienteId == null) {
             setRowCount(0);
@@ -52,6 +53,7 @@ public class HistoricoLazyModel extends LazyDataModel<SolicitacaoAtualizacaoDTO>
         SolicitacaoAtualizacaoDTO dto = new SolicitacaoAtualizacaoDTO();
         dto.setId(s.getId());
         dto.setDataCadastro(s.getDataCadastro() != null ? s.getDataCadastro().format(FMT) : "—");
+        dto.setTipo(s.getTipoSolicitacao() != null ? s.getTipoSolicitacao().name() : null);
         dto.setTipoDescricao(s.getTipoSolicitacao() != null ? s.getTipoSolicitacao().getDescricao() : "—");
         dto.setStatusDescricao(s.getStatus() != null ? s.getStatus().getDescricao() : "—");
         dto.setStatusCssClass(cssStatus(s.getStatus()));
@@ -91,7 +93,9 @@ public class HistoricoLazyModel extends LazyDataModel<SolicitacaoAtualizacaoDTO>
         } else if (s.getTipoSolicitacao() == TipoSolicitacao.CLINICO) {
             dto.setPesoProposto(fmt(s.getPesoProposto(), "kg"));
             dto.setAlturaProposta(fmt(s.getAlturaProposta(), "m"));
-            dto.setTipoSanguineoProposto(nvl(s.getTipoSanguineoProposto()));
+            dto.setTipoSanguineoProposto(s.getTipoSanguineoProposto() != null ?
+                    TipoSanguineoEnum.from(s.getTipoSanguineoProposto()).getDescricao() :
+                    "Nenhum valor encontrado");
             dto.setSnapshotPeso(fmt(s.getSnapshotPeso(), "kg"));
             dto.setSnapshotAltura(fmt(s.getSnapshotAltura(), "m"));
             dto.setSnapshotTipoSanguineo(nvl(s.getSnapshotTipoSanguineo()));
@@ -111,22 +115,28 @@ public class HistoricoLazyModel extends LazyDataModel<SolicitacaoAtualizacaoDTO>
 
     private String resumoClinico(SolicitacaoAtualizacao s) {
         return "Peso: " + fmt(s.getSnapshotPeso(), "kg") + " → " + fmt(s.getPesoProposto(), "kg")
-             + " | Altura: " + fmt(s.getSnapshotAltura(), "m") + " → " + fmt(s.getAlturaProposta(), "m");
+                + " | Altura: " + fmt(s.getSnapshotAltura(), "m") + " → " + fmt(s.getAlturaProposta(), "m");
     }
 
     private String cssStatus(StatusSolicitacao status) {
         if (status == null) return "pendente";
         switch (status) {
-            case A:  return "ativo";
-            case R:  return "inativo";
-            case C:  return "cancelado";
-            default: return "pendente";
+            case A:
+                return "ativo";
+            case R:
+                return "inativo";
+            case C:
+                return "cancelado";
+            default:
+                return "pendente";
         }
     }
 
-    private static String nvl(String v) { return v != null ? v : "—"; }
+    private static String nvl(String v) {
+        return v != null ? v : "Nenhum valor encontrado";
+    }
 
     private static String fmt(Double v, String unit) {
-        return v != null ? v + " " + unit : "—";
+        return v != null ? v + " " + unit : "Nenhum valor encontrado";
     }
 }
