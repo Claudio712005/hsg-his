@@ -1,6 +1,8 @@
 package br.com.hsg.web.filter;
 
+import br.com.hsg.dao.PainelPacienteDAO;
 import br.com.hsg.domain.entity.Paciente;
+import br.com.hsg.domain.entity.TipoSanguineo;
 import br.com.hsg.service.facade.paciente.PacienteServiceFacade;
 import br.com.hsg.web.bean.session.BeanSessao;
 import br.com.hsg.web.dto.response.PacienteResponseDTO;
@@ -33,6 +35,9 @@ public class FiltroAutenticacao implements Filter {
 
     @Inject
     private PacienteServiceFacade pacienteService;
+
+    @Inject
+    private PainelPacienteDAO painelPacienteDAO;
 
     private String kcAuthUrl;
     private String kcTokenUrl;
@@ -126,7 +131,14 @@ public class FiltroAutenticacao implements Filter {
         dto.setId(paciente.getId());
         dto.setNomeCompleto(paciente.getNomeCompleto());
         dto.setEmail(paciente.getEmail());
+        dto.setTelefone(paciente.getTelefone());
         dto.setUsername(paciente.getContaUsuario().getUsername());
+
+        TipoSanguineo tipoSanguineo = painelPacienteDAO.buscarUltimoTipoSanguineo(paciente.getId());
+        if (tipoSanguineo != null) {
+            dto.setTipoSanguineo(tipoSanguineo.getTipoSanguineo());
+        }
+
         beanSessao.setPaciente(dto);
 
         String originalUrl = (String) session.getAttribute(ATTR_ORIGINAL_URL);

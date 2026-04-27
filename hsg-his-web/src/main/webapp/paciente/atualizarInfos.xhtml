@@ -19,7 +19,7 @@
 
             <p:growl id="msgs" widgetVar="msgs" showDetail="true" life="6000" globalOnly="true"/>
 
-            <p:tabView id="tabs" dynamic="false">
+            <p:tabView id="tabs" dynamic="false" activeIndex="#{atualizarDadosPacienteBean.activeTabIndex}">
 
                 <p:tab id="tabCadastral" title="Dados Cadastrais e Endereço">
                     <pac:form-cadastral id="formCadastral" bean="#{atualizarDadosPacienteBean}"/>

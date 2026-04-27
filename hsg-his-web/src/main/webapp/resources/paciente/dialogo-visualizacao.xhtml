@@ -11,13 +11,26 @@
 </cc:interface>
 
 <cc:implementation>
+    <style type="text/css">
+        .dialogo-visualizacao-wrap {
+            overflow-x: hidden;
+        }
+
+        .dialogo-visualizacao-wrap .v {
+            white-space: normal;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+        }
+    </style>
+
     <p:dialog id="dialog"
               widgetVar="dlgVisualizacao"
               header="Detalhes da Solicitação"
               modal="true"
               resizable="false"
               width="620"
-              closeOnEscape="true">
+              closeOnEscape="true"
+              styleClass="dialogo-visualizacao-wrap">
 
         <h:panelGroup id="body" layout="block">
 
@@ -45,7 +58,6 @@
                     <h:panelGroup layout="block" styleClass="v"><h:outputText value="#{cc.attrs.bean.solicitacaoVisualizacao.enfermeiro}"/></h:panelGroup>
                 </h:panelGroup>
 
-                <!-- CADASTRAL -->
                 <h:panelGroup layout="block"
                               rendered="#{cc.attrs.bean.solicitacaoVisualizacao.tipo == 'CADASTRAL'}"
                               styleClass="panel" style="margin-bottom:12px;">
@@ -73,7 +85,6 @@
                     </h:panelGroup>
                 </h:panelGroup>
 
-                <!-- ENDERECO -->
                 <h:panelGroup layout="block"
                               rendered="#{cc.attrs.bean.solicitacaoVisualizacao.tipo == 'ENDERECO'}"
                               styleClass="panel" style="margin-bottom:12px;">
@@ -178,7 +189,7 @@
 
         <f:facet name="footer">
             <p:commandButton value="Fechar"
-                             icon="mi-icon ic-times"
+                             icon="fa fa-times"
                              type="button"
                              onclick="PF('dlgVisualizacao').hide();"
                              styleClass="btn secondary"/>

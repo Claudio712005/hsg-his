@@ -98,7 +98,9 @@ public class HistoricoLazyModel extends LazyDataModel<SolicitacaoAtualizacaoDTO>
                     "Nenhum valor encontrado");
             dto.setSnapshotPeso(fmt(s.getSnapshotPeso(), "kg"));
             dto.setSnapshotAltura(fmt(s.getSnapshotAltura(), "m"));
-            dto.setSnapshotTipoSanguineo(nvl(s.getSnapshotTipoSanguineo()));
+            dto.setSnapshotTipoSanguineo(s.getSnapshotTipoSanguineo() != null ?
+                    TipoSanguineoEnum.from(s.getSnapshotTipoSanguineo()).getDescricao() :
+                    "Nenhum valor encontrado");
             dto.setResumo(resumoClinico(s));
         }
 

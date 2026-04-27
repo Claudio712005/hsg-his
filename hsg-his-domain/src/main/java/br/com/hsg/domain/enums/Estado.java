@@ -40,7 +40,6 @@ public enum Estado {
     private String sigla;
     private String nome;
 
-    /** Returns null (not throws) when sigla is unknown — safe for legacy data. */
     public static Estado fromSigla(String sigla) {
         if (sigla == null || sigla.trim().isEmpty()) return null;
         for (Estado e : values()) {

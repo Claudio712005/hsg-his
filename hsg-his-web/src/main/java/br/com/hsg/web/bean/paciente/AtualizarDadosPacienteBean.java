@@ -14,6 +14,8 @@ import br.com.hsg.web.dto.response.PacienteResponseDTO;
 import br.com.hsg.web.dto.response.SolicitacaoAtualizacaoDTO;
 import br.com.hsg.web.model.HistoricoLazyModel;
 import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -30,6 +32,7 @@ import java.util.Objects;
 
 @ViewScoped
 @Named("atualizarDadosPacienteBean")
+@Slf4j
 public class AtualizarDadosPacienteBean implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -64,15 +67,29 @@ public class AtualizarDadosPacienteBean implements Serializable {
     private Double snpAltura;
     private String snpTipoSanguineo;
 
-    private SolicitacaoAtualizacaoDTO solicitacaoVisualizacao;
     private Long   idSolicitacaoParaCancelar;
-    private String motivoCancelamento;
 
+    @Getter
     private HistoricoLazyModel historicoCadastralModel;
+    @Getter
     private HistoricoLazyModel historicoClinicoModel;
 
+    @Getter
     private List<TipoSanguineoEnum> tiposSanguineos;
+    @Getter
     private List<Estado>            estados;
+
+    @Getter
+    @Setter
+    private SolicitacaoAtualizacaoDTO solicitacaoVisualizacao;
+
+    @Getter
+    @Setter
+    private String motivoCancelamento;
+
+    @Getter
+    @Setter
+    private Integer activeTabIndex = 0;
 
     @PostConstruct
     public void init() {
@@ -84,18 +101,22 @@ public class AtualizarDadosPacienteBean implements Serializable {
 
         PacienteResponseDTO paciente = beanSessao.getPaciente();
         Long pacienteId = paciente != null ? paciente.getId() : null;
+        log.debug("Inicializando AtualizarDadosPacienteBean para pacienteId={}", pacienteId);
 
         preencherFormCadastral(paciente);
         preencherFormEndereco(pacienteId);
+        preencherFormClinico(paciente);
 
         capturarSnapshotCadastral();
         capturarSnapshotEndereco();
+        capturarSnapshotClinico();
 
         List<TipoSolicitacao> tiposCadastrais = Arrays.asList(TipoSolicitacao.CADASTRAL, TipoSolicitacao.ENDERECO);
         List<TipoSolicitacao> tiposClinico    = Collections.singletonList(TipoSolicitacao.CLINICO);
 
         historicoCadastralModel = new HistoricoLazyModel(solicitacaoService, pacienteId, tiposCadastrais);
         historicoClinicoModel   = new HistoricoLazyModel(solicitacaoService, pacienteId, tiposClinico);
+        log.debug("Bean inicializado com modelos de historico cadastrados para pacienteId={}", pacienteId);
     }
 
     public boolean isFormCadastralAlterado() {
@@ -123,8 +144,10 @@ public class AtualizarDadosPacienteBean implements Serializable {
 
     public void solicitarAtualizacaoCadastral() {
         try {
+            Long pacienteId = pacienteId();
+            log.info("Solicitando atualizacao cadastral para pacienteId={}", pacienteId);
             solicitacaoService.solicitarAtualizacaoCadastral(
-                    pacienteId(),
+                    pacienteId,
                     formCadastral.getPrimeiroNome(),
                     formCadastral.getSobrenome(),
                     formCadastral.getEmail(),
@@ -134,19 +157,24 @@ public class AtualizarDadosPacienteBean implements Serializable {
             formCadastral.setMotivo(null);
             capturarSnapshotCadastral();
             historicoCadastralModel.setRowCount(0);
+            log.info("Solicitacao cadastral registrada para pacienteId={}", pacienteId);
             mensagem(FacesMessage.SEVERITY_INFO, "Solicitação registrada",
                     "Sua solicitação cadastral foi enviada e aguarda análise.");
         } catch (IllegalArgumentException e) {
+            log.warn("Dados invalidos ao solicitar atualizacao cadastral: {}", e.getMessage());
             mensagem(FacesMessage.SEVERITY_WARN, "Dados inválidos", e.getMessage());
         } catch (Exception e) {
+            log.error("Erro ao registrar solicitacao cadastral", e);
             mensagem(FacesMessage.SEVERITY_ERROR, "Erro ao registrar", e.getMessage());
         }
     }
 
     public void solicitarAtualizacaoEndereco() {
         try {
+            Long pacienteId = pacienteId();
+            log.info("Solicitando atualizacao de endereco para pacienteId={}", pacienteId);
             solicitacaoService.solicitarAtualizacaoEndereco(
-                    pacienteId(),
+                    pacienteId,
                     formEndereco.getLogradouro(),
                     formEndereco.getNumero(),
                     formEndereco.getComplemento(),
@@ -159,49 +187,59 @@ public class AtualizarDadosPacienteBean implements Serializable {
             formEndereco.setMotivo(null);
             capturarSnapshotEndereco();
             historicoCadastralModel.setRowCount(0);
+            log.info("Solicitacao de endereco registrada para pacienteId={}", pacienteId);
             mensagem(FacesMessage.SEVERITY_INFO, "Solicitação registrada",
                     "Sua solicitação de endereço foi enviada e aguarda análise.");
         } catch (IllegalArgumentException e) {
+            log.warn("Dados invalidos ao solicitar atualizacao de endereco: {}", e.getMessage());
             mensagem(FacesMessage.SEVERITY_WARN, "Dados inválidos", e.getMessage());
         } catch (Exception e) {
+            log.error("Erro ao registrar solicitacao de endereco", e);
             mensagem(FacesMessage.SEVERITY_ERROR, "Erro ao registrar", e.getMessage());
         }
     }
 
     public void solicitarAtualizacaoClinica() {
         try {
+            Long pacienteId = pacienteId();
+            log.info("Solicitando atualizacao clinica para pacienteId={}", pacienteId);
             solicitacaoService.solicitarAtualizacaoClinica(
-                    pacienteId(),
+                    pacienteId,
                     formClinico.getPeso(),
                     formClinico.getAltura(),
                     formClinico.getTipoSanguineo(),
                     formClinico.getMotivo()
             );
             formClinico  = new AtualizacaoClinicaDTO();
-            snpPeso          = null;
-            snpAltura        = null;
-            snpTipoSanguineo = null;
+            capturarSnapshotClinico();
             historicoClinicoModel.setRowCount(0);
+            log.info("Solicitacao clinica registrada para pacienteId={}", pacienteId);
             mensagem(FacesMessage.SEVERITY_INFO, "Solicitação registrada",
                     "Sua solicitação clínica foi enviada e aguarda análise.");
         } catch (IllegalArgumentException e) {
+            log.warn("Dados invalidos ao solicitar atualizacao clinica: {}", e.getMessage());
             mensagem(FacesMessage.SEVERITY_WARN, "Dados inválidos", e.getMessage());
         } catch (Exception e) {
+            log.error("Erro ao registrar solicitacao clinica", e);
             mensagem(FacesMessage.SEVERITY_ERROR, "Erro ao registrar",
                     "Não foi possível registrar a solicitação. Tente novamente.");
         }
     }
 
-    public void prepararCancelamento(Long id) {
+    public void prepararCancelamento(Long id, Integer abaIndex) {
         this.idSolicitacaoParaCancelar = id;
         this.motivoCancelamento        = null;
+        this.activeTabIndex            = abaIndex != null ? abaIndex : 0;
     }
 
     public void confirmarCancelamento() {
         try {
+            Long pacienteId = pacienteId();
+            Long solicitacaoId = idSolicitacaoParaCancelar;
+            log.info("Confirmando cancelamento da solicitacao={} para pacienteId={}", idSolicitacaoParaCancelar, pacienteId);
             solicitacaoService.cancelarSolicitacao(
-                    idSolicitacaoParaCancelar,
-                    pacienteId(),
+                    solicitacaoId,
+                    pacienteId,
                     TipoCancelador.CLIENTE,
                     motivoCancelamento
             );
@@ -209,11 +247,14 @@ public class AtualizarDadosPacienteBean implements Serializable {
             motivoCancelamento        = null;
             historicoCadastralModel.setRowCount(0);
             historicoClinicoModel.setRowCount(0);
+            log.info("Solicitacao={} cancelada para pacienteId={}", solicitacaoId, pacienteId);
             mensagem(FacesMessage.SEVERITY_INFO, "Cancelada",
                     "Solicitação cancelada com sucesso.");
         } catch (IllegalArgumentException | IllegalStateException e) {
+            log.warn("Nao foi possivel cancelar solicitacao={} : {}", idSolicitacaoParaCancelar, e.getMessage());
             mensagem(FacesMessage.SEVERITY_WARN, "Não foi possível cancelar", e.getMessage());
         } catch (Exception e) {
+            log.error("Erro ao cancelar solicitacao={}", idSolicitacaoParaCancelar, e);
             mensagem(FacesMessage.SEVERITY_ERROR, "Erro",
                     "Não foi possível cancelar. Tente novamente.");
         }
@@ -244,7 +285,21 @@ public class AtualizarDadosPacienteBean implements Serializable {
                 formEndereco.setEstado(endereco.getEstado());
                 formEndereco.setCep(endereco.getCep());
             }
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            log.warn("Nao foi possivel carregar endereco para pacienteId={}", pacienteId, e);
+        }
+    }
+
+    private void preencherFormClinico(PacienteResponseDTO paciente) {
+        if (paciente == null) return;
+        if (paciente.getPeso() != null) {
+            formClinico.setPeso(paciente.getPeso().doubleValue());
+        }
+        if (paciente.getAltura() != null) {
+            formClinico.setAltura(paciente.getAltura().doubleValue());
+        }
+        if (paciente.getTipoSanguineo() != null) {
+            formClinico.setTipoSanguineo(paciente.getTipoSanguineo().name());
         }
     }
 
@@ -265,6 +320,12 @@ public class AtualizarDadosPacienteBean implements Serializable {
         snpCep         = formEndereco.getCep();
     }
 
+    private void capturarSnapshotClinico() {
+        snpPeso          = formClinico.getPeso();
+        snpAltura        = formClinico.getAltura();
+        snpTipoSanguineo = formClinico.getTipoSanguineo();
+    }
+
     private Long pacienteId() {
         PacienteResponseDTO p = beanSessao.getPaciente();
         if (p == null) throw new IllegalArgumentException("Sessão inválida. Faça login novamente.");
@@ -279,16 +340,4 @@ public class AtualizarDadosPacienteBean implements Serializable {
     public void selecionarSolicitacao(SolicitacaoAtualizacaoDTO solicitacao) {
         this.solicitacaoVisualizacao = solicitacao;
     }
-
-    public HistoricoLazyModel getHistoricoCadastralModel() { return historicoCadastralModel; }
-    public HistoricoLazyModel getHistoricoClinicoModel()   { return historicoClinicoModel; }
-
-    public List<TipoSanguineoEnum> getTiposSanguineos() { return tiposSanguineos; }
-    public List<Estado>            getEstados()         { return estados; }
-
-    public SolicitacaoAtualizacaoDTO getSolicitacaoVisualizacao() { return solicitacaoVisualizacao; }
-    public void setSolicitacaoVisualizacao(SolicitacaoAtualizacaoDTO dto) { this.solicitacaoVisualizacao = dto; }
-
-    public String getMotivoCancelamento()              { return motivoCancelamento; }
-    public void   setMotivoCancelamento(String motivo) { this.motivoCancelamento = motivo; }
 }

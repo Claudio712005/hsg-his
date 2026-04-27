@@ -162,7 +162,7 @@ body.hsg-body {
     display: flex; align-items: center; justify-content: center;
     margin-bottom: 0.8rem;
 }
-.hsg-modulo-icon .pi { font-size: 1.6rem; color: #2563a8; }
+.hsg-modulo-icon i { font-size: 1.6rem; color: #2563a8; }
 
 .hsg-modulo-body { flex: 1; padding: 0 0.5rem; }
 

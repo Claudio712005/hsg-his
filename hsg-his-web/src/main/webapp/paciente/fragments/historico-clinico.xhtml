@@ -40,21 +40,21 @@
                 <h:outputText value="#{s.enfermeiro}"/>
             </p:column>
             <p:column headerText="Ações" style="width:80px;" styleClass="center-align">
-                <p:commandButton icon="mi-icon ic-eye"
+                <p:commandButton icon="fa fa-eye"
                                  title="Visualizar detalhes"
                                  styleClass="btn icon-btn info"
                                  process="@this"
                                  update=":mainForm:dlgVisu:body"
                                  action="#{atualizarDadosPacienteBean.selecionarSolicitacao(s)}"
-                                 oncomplete="PF('dlgVisualizacao').show();" />
+                                 oncomplete="if (!args.validationFailed) PF('dlgVisualizacao').show();" />
 
-                <p:commandButton icon="mi-icon ic-ban"
+                <p:commandButton icon="fa fa-ban"
                                  title="Cancelar solicitação"
                                  rendered="#{s.cancelavel}"
                                  styleClass="btn icon-btn danger"
                                  process="@this"
-                                 action="#{atualizarDadosPacienteBean.prepararCancelamento(s.id)}"
-                                 update=":mainForm:dlgCancel:body"
+                                 action="#{atualizarDadosPacienteBean.prepararCancelamento(s.id, 1)}"
+                                 update=":mainForm:dlgCancel:formCancelamento:body"
                                  oncomplete="PF('dlgCancelamento').show();" />
             </p:column>
         </p:dataTable>

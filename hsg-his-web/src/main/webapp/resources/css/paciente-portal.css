@@ -182,28 +182,19 @@ a:hover { text-decoration: underline; }
     color: #333;
     user-select: none;
 }
-.menu-header .chev {
-    width: 9px;
-    height: 9px;
-    border-right: 2px solid #666;
-    border-bottom: 2px solid #666;
-    transform: rotate(-45deg);
-    transition: transform 0.12s;
+.menu-header i {
     flex-shrink: 0;
-}
-.menu-group.open .menu-header .chev { transform: rotate(45deg); }
-.mi-icon {
-    display: inline-block;
-    width: 12px;
-    height: 12px;
-    position: relative;
-    flex-shrink: 0;
-    vertical-align: middle;
-}
-.menu-header .mi-icon {
+    font-size: 12px;
     width: 14px;
-    height: 14px;
-    background: #1f3a68;
+    text-align: center;
+}
+.menu-header .chev {
+    color: #666;
+    transition: transform 0.12s;
+}
+.menu-group.open .menu-header .chev { transform: rotate(90deg); }
+.menu-header i:not(.chev) {
+    color: #1f3a68;
     opacity: 0.85;
 }
 .menu-items { display: none; background: #fff; }
@@ -245,97 +236,6 @@ a:hover { text-decoration: underline; }
 }
 .menu-items a.active .badge { background: #fff; color: #1f3a68; }
 
-.mi-icon.ic-home { background: #fff; border: 2px solid #1f3a68; position: relative; }
-.mi-icon.ic-home::after {
-    content: "";
-    position: absolute;
-    inset: 3px;
-    background: #1f3a68;
-    clip-path: polygon(50% 0, 100% 55%, 85% 55%, 85% 100%, 60% 100%, 60% 70%, 40% 70%, 40% 100%, 15% 100%, 15% 55%, 0 55%);
-}
-.mi-icon.ic-user { background: #1f3a68; border-radius: 50% 50% 2px 2px; }
-.mi-icon.ic-cal  { background: #fff; border: 2px solid #1f3a68; position: relative; }
-.mi-icon.ic-cal::after {
-    content: "";
-    position: absolute;
-    inset: 2px 2px 4px 2px;
-    background: repeating-linear-gradient(90deg, #1f3a68 0 2px, transparent 2px 4px);
-    height: 2px;
-    top: 3px;
-}
-.mi-icon.ic-exam {
-    background: linear-gradient(#1f3a68 0 0) 2px 3px/10px 1px no-repeat,
-                linear-gradient(#1f3a68 0 0) 2px 6px/7px  1px no-repeat,
-                linear-gradient(#1f3a68 0 0) 2px 9px/10px 1px no-repeat,
-                #fff;
-    border: 1px solid #1f3a68;
-}
-.mi-icon.ic-int {
-    background: linear-gradient(#1f3a68, #1f3a68) center/10px 2px no-repeat,
-                linear-gradient(#1f3a68, #1f3a68) center/2px 10px no-repeat,
-                #fff;
-    border: 1px solid #1f3a68;
-}
-.mi-icon.ic-fin { background: #fff; border: 1px solid #1f3a68; position: relative; }
-.mi-icon.ic-fin::after {
-    content: "R$";
-    position: absolute;
-    inset: 0;
-    color: #1f3a68;
-    font: bold 8px Arial;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.mi-icon.ic-help {
-    background: #1f3a68;
-    color: #fff;
-    font: bold 10px Arial;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mi-icon.ic-eye {
-    background:
-        radial-gradient(circle, #1f3a68 0 3px, transparent 3px) center / 100% 100%,
-        #fff;
-    border: 1.5px solid #1f3a68;
-    border-radius: 40% / 50%;
-}
-
-.mi-icon.ic-ban {
-    background: #fff;
-    border: 1.5px solid #a00;
-    border-radius: 50%;
-}
-.mi-icon.ic-ban::after {
-    content: "";
-    position: absolute;
-    width: 1.5px;
-    height: 140%;
-    background: #a00;
-    top: -20%;
-    left: calc(50% - 0.75px);
-    transform: rotate(45deg);
-}
-
-.mi-icon.ic-times {
-    background:
-        linear-gradient(45deg,  transparent 38%, #666 38%, #666 62%, transparent 62%),
-        linear-gradient(-45deg, transparent 38%, #666 38%, #666 62%, transparent 62%);
-}
-
-.mi-icon.ic-send {
-    background: #1f3a68;
-    clip-path: polygon(0 20%, 100% 50%, 0 80%, 28% 50%);
-}
-
-.mi-icon.ic-map {
-    background: #1f3a68;
-    clip-path: polygon(50% 100%, 5% 42%, 18% 6%, 82% 6%, 95% 42%);
-    border-radius: 40% 40% 0 0;
-}
 
 .panel {
     background: #fff;
@@ -388,7 +288,7 @@ a:hover { text-decoration: underline; }
     display: flex;
     align-items: center;
     justify-content: center;
-    font: italic bold 15px "Times New Roman", serif;
+    font-size: 13px;
     flex-shrink: 0;
 }
 .welcome b { color: #1f3a68; }
@@ -525,6 +425,7 @@ table.data tbody tr:hover td { background: #eaf1fa; }
     font-weight: bold;
 }
 .btn.primary:hover { background: linear-gradient(#4a6a95, #2a4a7a); }
+.btn i { font-size: 12px; }
 .btn.secondary {
     border-color: #888;
     background: linear-gradient(#f5f5f5, #dcdcdc);
@@ -573,7 +474,7 @@ table.data tbody tr:hover td { background: #eaf1fa; }
     display: flex;
     align-items: center;
     justify-content: center;
-    font: bold 16px Arial;
+    font-size: 16px;
     border: 1px solid #0e1f3a;
     flex-shrink: 0;
 }
