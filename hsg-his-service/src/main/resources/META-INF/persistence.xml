@@ -12,6 +12,8 @@
         <class>br.com.hsg.domain.entity.TipoSanguineo</class>
         <class>br.com.hsg.domain.entity.SolicitacaoAtualizacao</class>
         <class>br.com.hsg.domain.entity.Endereco</class>
+        <class>br.com.hsg.domain.entity.Alergia</class>
+        <class>br.com.hsg.domain.entity.AlergiaHistorico</class>
 
 
         <properties>
