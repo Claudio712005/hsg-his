@@ -4,7 +4,7 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:p="http://primefaces.org/ui"
-                xmlns:pac="http://java.sun.com/jsf/composite/paciente"
+                xmlns:pac="http://java.sun.com/jsf/composite/paciente/atualizarInfos"
                 template="/WEB-INF/templates/paciente/layout.xhtml">
 
     <ui:define name="title">HSG - Atualizar Dados</ui:define>
@@ -24,18 +24,21 @@
                 <p:tab id="tabCadastral" title="Dados Cadastrais e Endereço">
                     <pac:form-cadastral id="formCadastral" bean="#{atualizarDadosPacienteBean}"/>
                     <pac:form-endereco  id="formEndereco"  bean="#{atualizarDadosPacienteBean}"/>
-                    <ui:include src="/paciente/fragments/historico-cadastral.xhtml"/>
+                    <ui:include src="/paciente/fragments/atualizarInfos/historico-cadastral.xhtml"/>
                 </p:tab>
 
                 <p:tab id="tabClinico" title="Dados Clínicos">
                     <pac:form-clinico id="formClinico" bean="#{atualizarDadosPacienteBean}"/>
-                    <ui:include src="/paciente/fragments/historico-clinico.xhtml"/>
+                    <ui:include src="/paciente/fragments/atualizarInfos/tabela-alergias.xhtml"/>
+                    <ui:include src="/paciente/fragments/atualizarInfos/historico-clinico.xhtml"/>
                 </p:tab>
 
             </p:tabView>
 
-            <pac:dialogo-cancelamento id="dlgCancel" bean="#{atualizarDadosPacienteBean}"/>
-            <pac:dialogo-visualizacao id="dlgVisu"   bean="#{atualizarDadosPacienteBean}"/>
+            <pac:dialogo-cancelamento    id="dlgCancel"        bean="#{atualizarDadosPacienteBean}"/>
+            <pac:dialogo-visualizacao    id="dlgVisu"          bean="#{atualizarDadosPacienteBean}"/>
+            <pac:dialogo-alergia-detalhe id="dlgAlergiaDetalhe" bean="#{alergiaBean}"/>
+            <pac:dialogo-alergia-excluir id="dlgAlergiaExcluir" bean="#{alergiaBean}"/>
 
         </h:form>
     </ui:define>
