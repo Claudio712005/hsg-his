@@ -1,11 +1,15 @@
 package br.com.hsg.web.filter;
 
 import br.com.hsg.dao.PainelPacienteDAO;
+import br.com.hsg.domain.entity.Enfermeiro;
+import br.com.hsg.domain.entity.Medico;
 import br.com.hsg.domain.entity.Paciente;
 import br.com.hsg.domain.entity.TipoSanguineo;
+import br.com.hsg.service.facade.clinica.ClinicaServiceFacade;
 import br.com.hsg.service.facade.paciente.PacienteServiceFacade;
 import br.com.hsg.web.bean.session.BeanSessao;
 import br.com.hsg.web.dto.response.PacienteResponseDTO;
+import br.com.hsg.web.dto.response.UsuarioClinicaDTO;
 
 import javax.inject.Inject;
 import javax.json.Json;
@@ -30,14 +34,10 @@ public class FiltroAutenticacao implements Filter {
     private static final String ATTR_STATE        = "oauth2_state";
     private static final String ATTR_ORIGINAL_URL = "original_url";
 
-    @Inject
-    private BeanSessao beanSessao;
-
-    @Inject
-    private PacienteServiceFacade pacienteService;
-
-    @Inject
-    private PainelPacienteDAO painelPacienteDAO;
+    @Inject private BeanSessao            beanSessao;
+    @Inject private PacienteServiceFacade pacienteService;
+    @Inject private PainelPacienteDAO     painelPacienteDAO;
+    @Inject private ClinicaServiceFacade  clinicaService;
 
     private String kcAuthUrl;
     private String kcTokenUrl;
@@ -75,6 +75,16 @@ public class FiltroAutenticacao implements Filter {
 
         HttpSession existingSession = request.getSession(false);
         if (existingSession != null && beanSessao.isLogado()) {
+            if (path.startsWith("/clinica/") && !beanSessao.isLogadoComoClinica()) {
+                response.sendError(HttpServletResponse.SC_FORBIDDEN,
+                        "Acesso restrito à equipe clínica.");
+                return;
+            }
+            if (path.startsWith("/paciente/") && !beanSessao.isLogadoComoPaciente()) {
+                response.sendError(HttpServletResponse.SC_FORBIDDEN,
+                        "Acesso restrito ao portal do paciente.");
+                return;
+            }
             chain.doFilter(req, res);
             return;
         }
@@ -101,13 +111,13 @@ public class FiltroAutenticacao implements Filter {
         String state = req.getParameter("state");
 
         if (session == null || code == null || code.isEmpty()) {
-            res.sendError(HttpServletResponse.SC_BAD_REQUEST, "Parâmetros de callback ausentes");
+            res.sendError(HttpServletResponse.SC_BAD_REQUEST, "Parâmetros de callback ausentes.");
             return;
         }
 
         String expectedState = (String) session.getAttribute(ATTR_STATE);
         if (expectedState == null || !expectedState.equals(state)) {
-            res.sendError(HttpServletResponse.SC_BAD_REQUEST, "State OAuth2 inválido");
+            res.sendError(HttpServletResponse.SC_BAD_REQUEST, "State OAuth2 inválido.");
             return;
         }
         session.removeAttribute(ATTR_STATE);
@@ -117,14 +127,42 @@ public class FiltroAutenticacao implements Filter {
         String keycloakId    = extractSub(accessToken);
 
         if (keycloakId == null || keycloakId.isEmpty()) {
-            res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token inválido");
+            res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token inválido.");
             return;
         }
 
+        String redirectHome;
+
+        if (hasRole(accessToken, "hsg-paciente")) {
+            redirectHome = handlePaciente(req, res, keycloakId);
+        } else if (hasRole(accessToken, "hsg-medico")) {
+            redirectHome = handleMedico(req, res, keycloakId);
+        } else if (hasRole(accessToken, "hsg-enfermeiro")) {
+            redirectHome = handleEnfermeiro(req, res, keycloakId);
+        } else {
+            res.sendError(HttpServletResponse.SC_FORBIDDEN, "Perfil sem acesso ao sistema.");
+            return;
+        }
+
+        if (redirectHome == null) return;
+
+        String originalUrl = (String) session.getAttribute(ATTR_ORIGINAL_URL);
+        session.removeAttribute(ATTR_ORIGINAL_URL);
+
+        if (originalUrl == null || originalUrl.isEmpty() || originalUrl.endsWith("/callback")) {
+            originalUrl = redirectHome;
+        }
+
+        res.sendRedirect(originalUrl);
+    }
+
+    private String handlePaciente(HttpServletRequest req, HttpServletResponse res, String keycloakId)
+            throws IOException {
+
         Paciente paciente = pacienteService.buscarPorKeycloakId(keycloakId);
         if (paciente == null || !paciente.podeLogar()) {
-            res.sendError(HttpServletResponse.SC_FORBIDDEN, "Usuário sem acesso ao sistema");
-            return;
+            res.sendError(HttpServletResponse.SC_FORBIDDEN, "Paciente sem acesso ao sistema.");
+            return null;
         }
 
         PacienteResponseDTO dto = new PacienteResponseDTO();
@@ -140,19 +178,51 @@ public class FiltroAutenticacao implements Filter {
         }
 
         beanSessao.setPaciente(dto);
+        return req.getContextPath() + "/paciente/home.xhtml";
+    }
 
-        String originalUrl = (String) session.getAttribute(ATTR_ORIGINAL_URL);
-        session.removeAttribute(ATTR_ORIGINAL_URL);
+    private String handleMedico(HttpServletRequest req, HttpServletResponse res, String keycloakId)
+            throws IOException {
 
-        String defaultHome = hasRole(accessToken, "hsg-paciente")
-                ? req.getContextPath() + "/paciente/home.xhtml"
-                : req.getContextPath() + "/home.xhtml";
-
-        if (originalUrl == null || originalUrl.isEmpty()
-                || originalUrl.endsWith("/callback")) {
-            originalUrl = defaultHome;
+        Medico medico = clinicaService.buscarMedicoPorKeycloakId(keycloakId);
+        if (medico == null || !medico.podeLogar()) {
+            res.sendError(HttpServletResponse.SC_FORBIDDEN, "Médico sem acesso ao sistema.");
+            return null;
         }
-        res.sendRedirect(originalUrl);
+
+        UsuarioClinicaDTO dto = new UsuarioClinicaDTO();
+        dto.setId(medico.getId());
+        dto.setNomeCompleto(medico.getNomeCompleto());
+        dto.setEmail(medico.getEmail());
+        dto.setUsername(medico.getContaUsuario().getUsername());
+        dto.setTipo("MEDICO");
+        dto.setRegistro(medico.getCrm() != null ? medico.getCrm().getFormatado() : null);
+        dto.setEspecialidade(medico.getEspecialidade());
+
+        beanSessao.setUsuarioClinica(dto);
+        return req.getContextPath() + "/clinica/home.xhtml";
+    }
+
+    private String handleEnfermeiro(HttpServletRequest req, HttpServletResponse res, String keycloakId)
+            throws IOException {
+
+        Enfermeiro enfermeiro = clinicaService.buscarEnfermeiroPorKeycloakId(keycloakId);
+        if (enfermeiro == null || !enfermeiro.podeLogar()) {
+            res.sendError(HttpServletResponse.SC_FORBIDDEN, "Enfermeiro sem acesso ao sistema.");
+            return null;
+        }
+
+        UsuarioClinicaDTO dto = new UsuarioClinicaDTO();
+        dto.setId(enfermeiro.getId());
+        dto.setNomeCompleto(enfermeiro.getNomeCompleto());
+        dto.setEmail(enfermeiro.getEmail());
+        dto.setUsername(enfermeiro.getContaUsuario().getUsername());
+        dto.setTipo("ENFERMEIRO");
+        dto.setRegistro(enfermeiro.getCoren() != null ? enfermeiro.getCoren().getFormatado() : null);
+        dto.setEspecialidade(enfermeiro.getEspecialidade());
+
+        beanSessao.setUsuarioClinica(dto);
+        return req.getContextPath() + "/clinica/home.xhtml";
     }
 
     private boolean isPublic(String path) {
@@ -186,8 +256,7 @@ public class FiltroAutenticacao implements Filter {
                 ? conn.getInputStream() : conn.getErrorStream();
 
         StringBuilder sb = new StringBuilder();
-        try (BufferedReader br = new BufferedReader(
-                new InputStreamReader(stream, "UTF-8"))) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(stream, "UTF-8"))) {
             String line;
             while ((line = br.readLine()) != null) sb.append(line);
         }
@@ -209,7 +278,6 @@ public class FiltroAutenticacao implements Filter {
         try {
             String[] parts = jwt.split("\\.");
             if (parts.length < 2) return null;
-
             String encoded = parts[1];
             switch (encoded.length() % 4) {
                 case 2: encoded += "=="; break;
