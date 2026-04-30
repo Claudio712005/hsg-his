@@ -40,6 +40,29 @@ services:
       - hsg-network
     command: migrate
 
+  seed:
+    image: postgres:15-alpine
+    container_name: hsg-seed
+    environment:
+      PGPASSWORD: postgres
+      APP_ENV: DEV
+    volumes:
+      - ./infra/db/seed/init.sql:/init.sql:ro
+    command: >
+      sh -c '
+        if [ "$$APP_ENV" = "DEV" ]; then
+          echo "[seed] APP_ENV=DEV — carregando dados de desenvolvimento...";
+          psql -h postgres -U postgres -d hsg -f /init.sql && echo "[seed] Concluído.";
+        else
+          echo "[seed] APP_ENV=$$APP_ENV — seed ignorado.";
+        fi
+      '
+    depends_on:
+      flyway:
+        condition: service_completed_successfully
+    networks:
+      - hsg-network
+
   keycloak:
     build:
       context: .
@@ -91,6 +114,8 @@ services:
       APP_DB_USER:     postgres
       APP_DB_PASSWORD: postgres
 
+      APP_ENV: DEV
+
       KC_AUTH_URL:    "http://localhost:8080/realms/hsg-his/protocol/openid-connect/auth"
       KC_TOKEN_URL:   "http://keycloak:8080/realms/hsg-his/protocol/openid-connect/token"
       KC_CLIENT_ID:   "hsg-his-web"
@@ -98,7 +123,7 @@ services:
     ports:
       - "8180:8080"
     depends_on:
-      flyway:
+      seed:
         condition: service_completed_successfully
       keycloak:
         condition: service_started

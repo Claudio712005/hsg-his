@@ -68,6 +68,19 @@ public class FiltroAutenticacao implements Filter {
             return;
         }
 
+        if ("/logout".equals(path)) {
+            HttpSession sessionToKill = request.getSession(false);
+            if (sessionToKill != null) sessionToKill.invalidate();
+            response.sendRedirect(
+                    kcAuthUrl
+                    + "?response_type=code"
+                    + "&client_id="    + URLEncoder.encode(clientId,    "UTF-8")
+                    + "&redirect_uri=" + URLEncoder.encode(redirectUri, "UTF-8")
+                    + "&prompt=login"
+                    + "&scope=openid");
+            return;
+        }
+
         if (isPublic(path)) {
             chain.doFilter(req, res);
             return;
