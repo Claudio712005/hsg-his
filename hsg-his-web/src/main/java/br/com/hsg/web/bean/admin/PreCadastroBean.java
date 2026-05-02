@@ -2,6 +2,8 @@ package br.com.hsg.web.bean.admin;
 
 import br.com.hsg.domain.entity.PreCadastroProfissional;
 import br.com.hsg.domain.enums.CategoriaCoren;
+import br.com.hsg.domain.enums.EspecialidadeMedica;
+import br.com.hsg.domain.enums.Estado;
 import br.com.hsg.domain.enums.StatusPreCadastro;
 import br.com.hsg.domain.enums.TipoProfissional;
 import br.com.hsg.service.facade.admin.PreCadastroServiceFacade;
@@ -47,8 +49,8 @@ public class PreCadastroBean implements Serializable {
                         form.getEmail(),
                         form.getCpf(),
                         form.getCrm(),
-                        form.getUfCrm(),
-                        form.getEspecialidade(),
+                        form.getUfCrm() != null ? form.getUfCrm().getSigla() : null,
+                        form.getEspecialidade() != null ? form.getEspecialidade().getDescricao() : null,
                         idAdmin);
             } else if (form.isEnfermeiro()) {
                 preCadastroService.criarParaEnfermeiro(
@@ -56,7 +58,7 @@ public class PreCadastroBean implements Serializable {
                         form.getEmail(),
                         form.getCpf(),
                         form.getCoren(),
-                        form.getUfCoren(),
+                        form.getUfCoren() != null ? form.getUfCoren().getSigla() : null,
                         form.getCategoriaCoren(),
                         idAdmin);
             } else {
@@ -66,7 +68,7 @@ public class PreCadastroBean implements Serializable {
             }
 
             JSFUtil.adicionarMensagem(null, FacesMessage.SEVERITY_INFO,
-                    "Pré-cadastro criado com sucesso. O convite será enviado por e-mail.");
+                    "Pré-cadastro criado com sucesso. Use o botão de envelope para enviar o convite.");
             form.limpar();
             carregarLista();
 
@@ -96,13 +98,10 @@ public class PreCadastroBean implements Serializable {
         form.limpar();
     }
 
-    public TipoProfissional[] getTiposProfissional() {
-        return TipoProfissional.values();
-    }
-
-    public CategoriaCoren[] getCategoriasCoren() {
-        return CategoriaCoren.values();
-    }
+    public TipoProfissional[]    getTiposProfissional()   { return TipoProfissional.values(); }
+    public CategoriaCoren[]      getCategoriasCoren()     { return CategoriaCoren.values(); }
+    public EspecialidadeMedica[] getEspecialidades()      { return EspecialidadeMedica.values(); }
+    public Estado[]              getEstados()             { return Estado.values(); }
 
     public long getTotalPendentes() {
         return preCadastroService.contarPorStatus(StatusPreCadastro.PENDENTE);

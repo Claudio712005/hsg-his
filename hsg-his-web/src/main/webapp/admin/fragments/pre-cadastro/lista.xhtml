@@ -3,26 +3,25 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
-                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
-                xmlns:f="http://xmlns.jcp.org/jsf/core">
+                xmlns:p="http://primefaces.org/ui">
 
-    <h:panelGroup layout="block" styleClass="panel" rendered="#{beanSessao.logadoComoAdmin}">
+    <h:panelGroup id="panelListaPreCadastro" layout="block" styleClass="panel"
+                  rendered="#{beanSessao.logadoComoAdmin}">
+
         <h:panelGroup layout="block" styleClass="panel-title">
             <i class="fa fa-list panel-icon"/>
             <h:outputText value="Pré-cadastros Registrados"/>
-            <h:panelGroup layout="block" styleClass="tools">
-                <h:outputText value="Pendentes: "  styleClass="badge-label"/>
+            <h:panelGroup layout="block" styleClass="tools" style="margin-left:auto; display:flex; align-items:center; gap:6px;">
+                <span style="font-size:11px; color:#666; font-weight:normal;">Pendentes:</span>
                 <span class="chip pendente">
                     <h:outputText value="#{preCadastroBean.totalPendentes}"/>
                 </span>
             </h:panelGroup>
         </h:panelGroup>
 
-        <h:panelGroup layout="block" rendered="#{empty preCadastroBean.lista}">
-            <h:panelGroup layout="block" styleClass="note">
-                <i class="fa fa-info-circle"/>
-                <h:outputText value=" Nenhum pré-cadastro registrado ainda."/>
-            </h:panelGroup>
+        <h:panelGroup layout="block" rendered="#{empty preCadastroBean.lista}" styleClass="empty-state">
+            <div class="empty-icon"><i class="fa fa-inbox"/></div>
+            <h:outputText value="Nenhum pré-cadastro registrado ainda."/>
         </h:panelGroup>
 
         <h:panelGroup layout="block" rendered="#{not empty preCadastroBean.lista}">
@@ -31,11 +30,11 @@
                     <tr>
                         <th>Nome</th>
                         <th style="width:100px;">Tipo</th>
-                        <th style="width:200px;">E-mail</th>
+                        <th style="width:210px;">E-mail</th>
                         <th style="width:80px;" class="center-align">Status</th>
-                        <th style="width:90px;" class="center-align">E-mail enviado</th>
+                        <th style="width:90px;" class="center-align">Convite</th>
                         <th style="width:130px;">Criado em</th>
-                        <th style="width:90px;" class="center-align">Ações</th>
+                        <th style="width:80px;" class="center-align">Ações</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -59,37 +58,43 @@
                             </td>
                             <td class="center-align">
                                 <h:panelGroup rendered="#{pc.emailEnviado}">
-                                    <i class="fa fa-check" style="color:#2e7d32;" title="Enviado em #{pc.dataEnvioEmail}"/>
+                                    <i class="fa fa-check" style="color:#2e7d32;"
+                                       title="Enviado em #{pc.dataEnvioEmailFormatada}"/>
                                 </h:panelGroup>
                                 <h:panelGroup rendered="#{not pc.emailEnviado}">
                                     <i class="fa fa-times" style="color:#c62828;" title="Não enviado"/>
                                 </h:panelGroup>
                             </td>
-                            <td>
-                                <h:outputText value="#{pc.dataCriacao}">
-                                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="America/Sao_Paulo"/>
-                                </h:outputText>
+                            <td class="mono" style="font-size:11px;">
+                                <h:outputText value="#{pc.dataCriacaoFormatada}"/>
                             </td>
                             <td class="center-align">
                                 <h:form>
-                                    <h:commandButton title="Enviar convite por e-mail"
+                                    <p:commandButton icon="fa fa-envelope"
+                                                     title="Enviar convite por e-mail"
                                                      styleClass="btn icon-btn primary"
                                                      action="#{preCadastroBean.enviarConvite(pc.id)}"
-                                                     rendered="#{pc.pendente and not pc.emailEnviado}">
-                                        <i class="fa fa-envelope"/>
-                                    </h:commandButton>
-                                    <h:commandButton title="Reenviar convite"
+                                                     process="@this"
+                                                     update=":msgs :panelListaPreCadastro"
+                                                     rendered="#{pc.pendente and not pc.emailEnviado}"/>
+                                    <p:commandButton icon="fa fa-redo"
+                                                     title="Reenviar convite"
                                                      styleClass="btn icon-btn secondary"
                                                      action="#{preCadastroBean.enviarConvite(pc.id)}"
-                                                     rendered="#{pc.pendente and pc.emailEnviado}">
-                                        <i class="fa fa-redo"/>
-                                    </h:commandButton>
+                                                     process="@this"
+                                                     update=":msgs :panelListaPreCadastro"
+                                                     rendered="#{pc.pendente and pc.emailEnviado}"/>
                                 </h:form>
                             </td>
                         </tr>
                     </ui:repeat>
                 </tbody>
             </table>
+        </h:panelGroup>
+
+        <h:panelGroup layout="block" styleClass="note">
+            <i class="fa fa-info-circle"/>
+            <h:outputText value=" Exibindo os 50 registros mais recentes. Use o botão de envelope para enviar o convite de cadastro ao profissional."/>
         </h:panelGroup>
 
     </h:panelGroup>

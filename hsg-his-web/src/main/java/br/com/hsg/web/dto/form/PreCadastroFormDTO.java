@@ -1,6 +1,8 @@
 package br.com.hsg.web.dto.form;
 
 import br.com.hsg.domain.enums.CategoriaCoren;
+import br.com.hsg.domain.enums.EspecialidadeMedica;
+import br.com.hsg.domain.enums.Estado;
 import br.com.hsg.domain.enums.TipoProfissional;
 import lombok.Data;
 
@@ -20,19 +22,22 @@ public class PreCadastroFormDTO implements Serializable {
 
     // campos de médico
     private String crm;
-    private String ufCrm;
-    private String especialidade;
+    private Estado ufCrm;
+    private EspecialidadeMedica especialidade;
 
     // campos de enfermeiro
     private String coren;
-    private String ufCoren;
+    private Estado ufCoren;
     private CategoriaCoren categoriaCoren;
 
     public void limpar() {
         tipoProfissional = null;
         nome = email = cpf = null;
-        crm = ufCrm = especialidade = null;
-        coren = ufCoren = null;
+        crm = null;
+        ufCrm = null;
+        especialidade = null;
+        coren = null;
+        ufCoren = null;
         categoriaCoren = null;
     }
 

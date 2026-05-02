@@ -16,6 +16,7 @@ import lombok.Getter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 @Entity
@@ -176,5 +177,15 @@ public class PreCadastroProfissional {
 
     public boolean isEnfermeiro() {
         return TipoProfissional.ENFERMEIRO.equals(this.tipoProfissional);
+    }
+
+    public String getDataCriacaoFormatada() {
+        if (dataCriacao == null) return "";
+        return dataCriacao.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+    }
+
+    public String getDataEnvioEmailFormatada() {
+        if (dataEnvioEmail == null) return "";
+        return dataEnvioEmail.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
     }
 }
