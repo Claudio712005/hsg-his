@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <h:panelGroup layout="block"
+                  styleClass="form-grid form-section"
+                  rendered="#{preCadastroBean.form.medico}">
+
+        <h:panelGroup layout="block" styleClass="section-title">
+            <i class="fa fa-user-md"/>
+            <h:outputText value=" Dados do Médico"/>
+        </h:panelGroup>
+
+        <h:panelGroup layout="block" styleClass="field">
+            <h:outputLabel for="crm" value="CRM *"/>
+            <h:inputText id="crm"
+                         value="#{preCadastroBean.form.crm}"
+                         styleClass="input"
+                         maxlength="20"
+                         required="#{preCadastroBean.form.medico}"
+                         requiredMessage="CRM é obrigatório para médicos."/>
+            <h:message for="crm" styleClass="field-error"/>
+        </h:panelGroup>
+
+        <h:panelGroup layout="block" styleClass="field">
+            <h:outputLabel for="ufCrm" value="UF do CRM *"/>
+            <h:inputText id="ufCrm"
+                         value="#{preCadastroBean.form.ufCrm}"
+                         styleClass="input"
+                         maxlength="2"
+                         required="#{preCadastroBean.form.medico}"
+                         requiredMessage="UF do CRM é obrigatória."/>
+            <h:message for="ufCrm" styleClass="field-error"/>
+        </h:panelGroup>
+
+        <h:panelGroup layout="block" styleClass="field">
+            <h:outputLabel for="especialidade" value="Especialidade"/>
+            <h:inputText id="especialidade"
+                         value="#{preCadastroBean.form.especialidade}"
+                         styleClass="input"
+                         maxlength="100"/>
+        </h:panelGroup>
+
+    </h:panelGroup>
+
+</ui:composition>

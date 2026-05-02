@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:panelGroup layout="block" styleClass="panel" rendered="#{beanSessao.logadoComoAdmin}">
+        <h:panelGroup layout="block" styleClass="panel-title">
+            <i class="fa fa-list panel-icon"/>
+            <h:outputText value="Pré-cadastros Registrados"/>
+            <h:panelGroup layout="block" styleClass="tools">
+                <h:outputText value="Pendentes: "  styleClass="badge-label"/>
+                <span class="chip pendente">
+                    <h:outputText value="#{preCadastroBean.totalPendentes}"/>
+                </span>
+            </h:panelGroup>
+        </h:panelGroup>
+
+        <h:panelGroup layout="block" rendered="#{empty preCadastroBean.lista}">
+            <h:panelGroup layout="block" styleClass="note">
+                <i class="fa fa-info-circle"/>
+                <h:outputText value=" Nenhum pré-cadastro registrado ainda."/>
+            </h:panelGroup>
+        </h:panelGroup>
+
+        <h:panelGroup layout="block" rendered="#{not empty preCadastroBean.lista}">
+            <table class="data">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th style="width:100px;">Tipo</th>
+                        <th style="width:200px;">E-mail</th>
+                        <th style="width:80px;" class="center-align">Status</th>
+                        <th style="width:90px;" class="center-align">E-mail enviado</th>
+                        <th style="width:130px;">Criado em</th>
+                        <th style="width:90px;" class="center-align">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <ui:repeat value="#{preCadastroBean.lista}" var="pc">
+                        <tr>
+                            <td><h:outputText value="#{pc.nome}"/></td>
+                            <td>
+                                <h:outputText value="#{pc.tipoProfissional.descricao}"/>
+                            </td>
+                            <td class="mono"><h:outputText value="#{pc.email}"/></td>
+                            <td class="center-align">
+                                <h:panelGroup rendered="#{pc.status.name() == 'PENDENTE'}">
+                                    <span class="chip pendente">Pendente</span>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{pc.status.name() == 'CONCLUIDO'}">
+                                    <span class="chip ativo">Concluído</span>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{pc.status.name() == 'EXPIRADO'}">
+                                    <span class="chip inativo">Expirado</span>
+                                </h:panelGroup>
+                            </td>
+                            <td class="center-align">
+                                <h:panelGroup rendered="#{pc.emailEnviado}">
+                                    <i class="fa fa-check" style="color:#2e7d32;" title="Enviado em #{pc.dataEnvioEmail}"/>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{not pc.emailEnviado}">
+                                    <i class="fa fa-times" style="color:#c62828;" title="Não enviado"/>
+                                </h:panelGroup>
+                            </td>
+                            <td>
+                                <h:outputText value="#{pc.dataCriacao}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="America/Sao_Paulo"/>
+                                </h:outputText>
+                            </td>
+                            <td class="center-align">
+                                <h:form>
+                                    <h:commandButton title="Enviar convite por e-mail"
+                                                     styleClass="btn icon-btn primary"
+                                                     action="#{preCadastroBean.enviarConvite(pc.id)}"
+                                                     rendered="#{pc.pendente and not pc.emailEnviado}">
+                                        <i class="fa fa-envelope"/>
+                                    </h:commandButton>
+                                    <h:commandButton title="Reenviar convite"
+                                                     styleClass="btn icon-btn secondary"
+                                                     action="#{preCadastroBean.enviarConvite(pc.id)}"
+                                                     rendered="#{pc.pendente and pc.emailEnviado}">
+                                        <i class="fa fa-redo"/>
+                                    </h:commandButton>
+                                </h:form>
+                            </td>
+                        </tr>
+                    </ui:repeat>
+                </tbody>
+            </table>
+        </h:panelGroup>
+
+    </h:panelGroup>
+
+</ui:composition>

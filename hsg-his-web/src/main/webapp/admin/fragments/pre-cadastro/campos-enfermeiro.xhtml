@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:panelGroup layout="block"
+                  styleClass="form-grid form-section"
+                  rendered="#{preCadastroBean.form.enfermeiro}">
+
+        <h:panelGroup layout="block" styleClass="section-title">
+            <i class="fa fa-user-nurse"/>
+            <h:outputText value=" Dados do Enfermeiro"/>
+        </h:panelGroup>
+
+        <h:panelGroup layout="block" styleClass="field">
+            <h:outputLabel for="coren" value="COREN *"/>
+            <h:inputText id="coren"
+                         value="#{preCadastroBean.form.coren}"
+                         styleClass="input"
+                         maxlength="20"
+                         required="#{preCadastroBean.form.enfermeiro}"
+                         requiredMessage="COREN é obrigatório para enfermeiros."/>
+            <h:message for="coren" styleClass="field-error"/>
+        </h:panelGroup>
+
+        <h:panelGroup layout="block" styleClass="field">
+            <h:outputLabel for="ufCoren" value="UF do COREN *"/>
+            <h:inputText id="ufCoren"
+                         value="#{preCadastroBean.form.ufCoren}"
+                         styleClass="input"
+                         maxlength="2"
+                         required="#{preCadastroBean.form.enfermeiro}"
+                         requiredMessage="UF do COREN é obrigatória."/>
+            <h:message for="ufCoren" styleClass="field-error"/>
+        </h:panelGroup>
+
+        <h:panelGroup layout="block" styleClass="field">
+            <h:outputLabel for="categoriaCoren" value="Categoria *"/>
+            <h:selectOneMenu id="categoriaCoren"
+                             value="#{preCadastroBean.form.categoriaCoren}"
+                             styleClass="input"
+                             required="#{preCadastroBean.form.enfermeiro}"
+                             requiredMessage="Categoria do COREN é obrigatória.">
+                <f:selectItem itemLabel="Selecione..." itemValue="#{null}" noSelectionOption="true"/>
+                <f:selectItems value="#{preCadastroBean.categoriasCoren}"
+                               var="cat"
+                               itemValue="#{cat}"
+                               itemLabel="#{cat.descricao}"/>
+            </h:selectOneMenu>
+            <h:message for="categoriaCoren" styleClass="field-error"/>
+        </h:panelGroup>
+
+    </h:panelGroup>
+
+</ui:composition>
