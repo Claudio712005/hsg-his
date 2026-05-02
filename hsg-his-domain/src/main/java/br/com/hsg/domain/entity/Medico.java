@@ -57,8 +57,9 @@ public class Medico {
     private LocalDate dataNascimento;
 
     @Getter
-    @Column(name = "DS_ESPECIALIDADE_MEDICO", length = 100)
-    private String especialidade;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ID_ESPECIALIDADE")
+    private Especialidade especialidade;
 
     @Getter
     @Convert(converter = IndicativoStatusConverter.class)
@@ -74,7 +75,7 @@ public class Medico {
     private LocalDateTime dataUltimaAtualizacao;
 
     @Getter
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_CONTA_USU_MEDICO", unique = true)
     private ContaUsuario contaUsuario;
 
@@ -86,19 +87,19 @@ public class Medico {
             Telefone telefone,
             Crm crm,
             LocalDate dataNascimento,
-            String especialidade,
+            Especialidade especialidade,
             ContaUsuario contaUsuario) {
 
         Medico m = new Medico();
-        m.nome               = nome;
-        m.email              = email;
-        m.telefone           = telefone;
-        m.crm                = crm;
-        m.dataNascimento     = dataNascimento;
-        m.especialidade      = especialidade;
-        m.contaUsuario       = contaUsuario;
-        m.status             = IndicativoStatus.A;
-        m.dataCadastro       = LocalDateTime.now();
+        m.nome                  = nome;
+        m.email                 = email;
+        m.telefone              = telefone;
+        m.crm                   = crm;
+        m.dataNascimento        = dataNascimento;
+        m.especialidade         = especialidade;
+        m.contaUsuario          = contaUsuario;
+        m.status                = IndicativoStatus.A;
+        m.dataCadastro          = LocalDateTime.now();
         m.dataUltimaAtualizacao = LocalDateTime.now();
         return m;
     }

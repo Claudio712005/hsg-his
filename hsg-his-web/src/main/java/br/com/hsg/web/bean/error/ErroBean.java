@@ -25,11 +25,14 @@ public class ErroBean implements Serializable {
     public String getHomeUrl() {
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         String ctx = ec.getRequestContextPath();
-        if (beanSessao.isLogadoComoPaciente()) {
-            return ctx + "/paciente/home.xhtml";
+        if (beanSessao.isLogadoComoAdmin()) {
+            return ctx + "/admin/home.xhtml";
         }
         if (beanSessao.isLogadoComoClinica()) {
             return ctx + "/clinica/home.xhtml";
+        }
+        if (beanSessao.isLogadoComoPaciente()) {
+            return ctx + "/paciente/home.xhtml";
         }
         return null;
     }

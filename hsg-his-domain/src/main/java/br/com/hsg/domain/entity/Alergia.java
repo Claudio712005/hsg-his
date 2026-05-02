@@ -133,6 +133,28 @@ public class Alergia {
         this.dataUltimaAlteracao = LocalDateTime.now();
     }
 
+    public void aprovar(Long idAprovador, String observacaoEnfermeiro) {
+        if (this.statusAlergia != StatusAlergia.INFORMADA) {
+            throw new IllegalStateException(
+                "Apenas alergias com status Informada podem ser aprovadas.");
+        }
+        this.statusAlergia          = StatusAlergia.APROVADA;
+        this.idAprovador            = idAprovador;
+        this.observacaoEnfermeiro   = observacaoEnfermeiro;
+        this.dataUltimaAlteracao    = LocalDateTime.now();
+    }
+
+    public void rejeitar(Long idAprovador, String observacaoEnfermeiro) {
+        if (this.statusAlergia != StatusAlergia.INFORMADA) {
+            throw new IllegalStateException(
+                "Apenas alergias com status Informada podem ser rejeitadas.");
+        }
+        this.statusAlergia          = StatusAlergia.REJEITADA;
+        this.idAprovador            = idAprovador;
+        this.observacaoEnfermeiro   = observacaoEnfermeiro;
+        this.dataUltimaAlteracao    = LocalDateTime.now();
+    }
+
     public void validarExclusao() {
         if (statusAlergia != StatusAlergia.INFORMADA && statusAlergia != StatusAlergia.REJEITADA) {
             throw new IllegalStateException(

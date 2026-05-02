@@ -1,13 +1,16 @@
 package br.com.hsg.web.filter;
 
 import br.com.hsg.dao.PainelPacienteDAO;
+import br.com.hsg.domain.entity.Admin;
 import br.com.hsg.domain.entity.Enfermeiro;
 import br.com.hsg.domain.entity.Medico;
 import br.com.hsg.domain.entity.Paciente;
 import br.com.hsg.domain.entity.TipoSanguineo;
+import br.com.hsg.service.facade.admin.AdminServiceFacade;
 import br.com.hsg.service.facade.clinica.ClinicaServiceFacade;
 import br.com.hsg.service.facade.paciente.PacienteServiceFacade;
 import br.com.hsg.web.bean.session.BeanSessao;
+import br.com.hsg.web.dto.response.AdminResponseDTO;
 import br.com.hsg.web.dto.response.PacienteResponseDTO;
 import br.com.hsg.web.dto.response.UsuarioClinicaDTO;
 
@@ -38,6 +41,7 @@ public class FiltroAutenticacao implements Filter {
     @Inject private PacienteServiceFacade pacienteService;
     @Inject private PainelPacienteDAO     painelPacienteDAO;
     @Inject private ClinicaServiceFacade  clinicaService;
+    @Inject private AdminServiceFacade    adminService;
 
     private String kcAuthUrl;
     private String kcTokenUrl;
@@ -88,6 +92,11 @@ public class FiltroAutenticacao implements Filter {
 
         HttpSession existingSession = request.getSession(false);
         if (existingSession != null && beanSessao.isLogado()) {
+            if (path.startsWith("/admin/") && !beanSessao.isLogadoComoAdmin()) {
+                response.sendError(HttpServletResponse.SC_FORBIDDEN,
+                        "Acesso restrito a administradores.");
+                return;
+            }
             if (path.startsWith("/clinica/") && !beanSessao.isLogadoComoClinica()) {
                 response.sendError(HttpServletResponse.SC_FORBIDDEN,
                         "Acesso restrito à equipe clínica.");
@@ -146,7 +155,9 @@ public class FiltroAutenticacao implements Filter {
 
         String redirectHome;
 
-        if (hasRole(accessToken, "hsg-paciente")) {
+        if (hasRole(accessToken, "hsg-admin")) {
+            redirectHome = handleAdmin(req, res, keycloakId);
+        } else if (hasRole(accessToken, "hsg-paciente")) {
             redirectHome = handlePaciente(req, res, keycloakId);
         } else if (hasRole(accessToken, "hsg-medico")) {
             redirectHome = handleMedico(req, res, keycloakId);
@@ -167,6 +178,25 @@ public class FiltroAutenticacao implements Filter {
         }
 
         res.sendRedirect(originalUrl);
+    }
+
+    private String handleAdmin(HttpServletRequest req, HttpServletResponse res, String keycloakId)
+            throws IOException {
+
+        Admin admin = adminService.buscarPorKeycloakId(keycloakId);
+        if (admin == null || !admin.podeLogar()) {
+            res.sendError(HttpServletResponse.SC_FORBIDDEN, "Administrador sem acesso ao sistema.");
+            return null;
+        }
+
+        AdminResponseDTO dto = new AdminResponseDTO();
+        dto.setId(admin.getId());
+        dto.setNomeCompleto(admin.getNomeCompleto());
+        dto.setEmail(admin.getEmail());
+        dto.setUsername(admin.getContaUsuario().getUsername());
+
+        beanSessao.setAdmin(dto);
+        return req.getContextPath() + "/admin/home.xhtml";
     }
 
     private String handlePaciente(HttpServletRequest req, HttpServletResponse res, String keycloakId)
@@ -210,7 +240,7 @@ public class FiltroAutenticacao implements Filter {
         dto.setUsername(medico.getContaUsuario().getUsername());
         dto.setTipo("MEDICO");
         dto.setRegistro(medico.getCrm() != null ? medico.getCrm().getFormatado() : null);
-        dto.setEspecialidade(medico.getEspecialidade());
+        dto.setEspecialidade(medico.getEspecialidade() != null ? medico.getEspecialidade().getNome() : null);
 
         beanSessao.setUsuarioClinica(dto);
         return req.getContextPath() + "/clinica/home.xhtml";

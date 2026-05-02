@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <h:panelGroup layout="block" styleClass="panel">
+        <h:panelGroup layout="block" styleClass="panel-title">
+            <i class="fa fa-user-md panel-icon"></i>
+            <h:outputText value="Médicos Cadastrados"/>
+            <h:panelGroup layout="block" styleClass="tools">
+                <button type="button" class="btn icon-btn primary" title="Cadastrar novo médico">
+                    <i class="fa fa-plus"></i>
+                </button>
+            </h:panelGroup>
+        </h:panelGroup>
+
+        <table class="data">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th style="width:130px;">CRM</th>
+                    <th style="width:140px;">Especialidade</th>
+                    <th style="width:80px;" class="center-align">Status</th>
+                    <th style="width:110px;">Cadastrado em</th>
+                    <th style="width:70px;" class="center-align">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Carlos Eduardo Lima</td>
+                    <td class="mono">CRM-SP 123456</td>
+                    <td>Cardiologia</td>
+                    <td class="center-align"><span class="chip ativo">Ativo</span></td>
+                    <td>12/01/2024</td>
+                    <td class="center-align">
+                        <button type="button" class="btn icon-btn info" title="Visualizar médico">
+                            <i class="fa fa-eye"></i>
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Ana Paula Ferreira</td>
+                    <td class="mono">CRM-SP 234567</td>
+                    <td>Clínica Geral</td>
+                    <td class="center-align"><span class="chip ativo">Ativo</span></td>
+                    <td>08/03/2024</td>
+                    <td class="center-align">
+                        <button type="button" class="btn icon-btn info" title="Visualizar médico">
+                            <i class="fa fa-eye"></i>
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Rafael Santos Oliveira</td>
+                    <td class="mono">CRM-SP 345678</td>
+                    <td>Ortopedia</td>
+                    <td class="center-align"><span class="chip ativo">Ativo</span></td>
+                    <td>22/05/2024</td>
+                    <td class="center-align">
+                        <button type="button" class="btn icon-btn info" title="Visualizar médico">
+                            <i class="fa fa-eye"></i>
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Juliana Costa Mendes</td>
+                    <td class="mono">CRM-SP 456789</td>
+                    <td>Neurologia</td>
+                    <td class="center-align"><span class="chip inativo">Inativo</span></td>
+                    <td>15/07/2024</td>
+                    <td class="center-align">
+                        <button type="button" class="btn icon-btn info" title="Visualizar médico">
+                            <i class="fa fa-eye"></i>
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Marcelo Rodrigues Souza</td>
+                    <td class="mono">CRM-SP 567890</td>
+                    <td>Pediatria</td>
+                    <td class="center-align"><span class="chip ativo">Ativo</span></td>
+                    <td>03/09/2024</td>
+                    <td class="center-align">
+                        <button type="button" class="btn icon-btn info" title="Visualizar médico">
+                            <i class="fa fa-eye"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h:panelGroup layout="block" styleClass="note">
+            <i class="fa fa-info-circle"></i>
+            Dados estáticos para visualização. A integração com a base de dados será implementada em breve.
+        </h:panelGroup>
+    </h:panelGroup>
+
+</ui:composition>

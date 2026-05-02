@@ -33,4 +33,12 @@ public interface AlergiaServiceFacade {
     Alergia buscarPorId(Long alergiaId);
 
     List<AlergiaHistorico> buscarHistorico(Long alergiaId);
+
+    void aprovarAlergia(Long alergiaId, Long idAprovador, String observacao);
+
+    void rejeitarAlergia(Long alergiaId, Long idAprovador, String observacao);
+
+    List<Alergia> listarParaAprovacao(int inicio, int tamanho);
+
+    long contarParaAprovacao();
 }
