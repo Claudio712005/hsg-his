@@ -1,5 +1,6 @@
 package br.com.hsg.web.bean.admin;
 
+import br.com.hsg.domain.entity.EnvioConviteHistorico;
 import br.com.hsg.domain.entity.PreCadastroProfissional;
 import br.com.hsg.domain.enums.CategoriaCoren;
 import br.com.hsg.domain.enums.EspecialidadeMedica;
@@ -17,6 +18,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 
 @ViewScoped
@@ -28,8 +30,10 @@ public class PreCadastroBean implements Serializable {
     @Inject private PreCadastroServiceFacade preCadastroService;
     @Inject private BeanSessao               beanSessao;
 
-    private PreCadastroFormDTO form;
-    private List<PreCadastroProfissional> lista;
+    private PreCadastroFormDTO              form;
+    private List<PreCadastroProfissional>   lista;
+    private PreCadastroProfissional         selecionado;
+    private List<EnvioConviteHistorico>     historico;
 
     @PostConstruct
     public void init() {
@@ -72,9 +76,7 @@ public class PreCadastroBean implements Serializable {
             form.limpar();
             carregarLista();
 
-        } catch (IllegalArgumentException e) {
-            JSFUtil.adicionarMensagem(null, FacesMessage.SEVERITY_WARN, e.getMessage());
-        } catch (IllegalStateException e) {
+        } catch (IllegalArgumentException | IllegalStateException e) {
             JSFUtil.adicionarMensagem(null, FacesMessage.SEVERITY_WARN, e.getMessage());
         }
     }
@@ -82,16 +84,34 @@ public class PreCadastroBean implements Serializable {
     public void enviarConvite(Long preCadastroId) {
         garantirAdmin();
         try {
-            preCadastroService.enviarConvite(preCadastroId);
+            Long   idAdmin   = beanSessao.getAdmin().getId();
+            String nomeAdmin = beanSessao.getAdmin().getNomeCompleto();
+            preCadastroService.enviarConvite(preCadastroId, idAdmin, nomeAdmin);
             JSFUtil.adicionarMensagem(null, FacesMessage.SEVERITY_INFO,
-                    "Convite enviado com sucesso.");
+                    "Convite enviado com sucesso. Link válido por 7 dias.");
             carregarLista();
+            if (selecionado != null && selecionado.getId().equals(preCadastroId)) {
+                selecionado = preCadastroService.buscarPorId(preCadastroId);
+                historico   = preCadastroService.buscarHistorico(preCadastroId);
+            }
         } catch (IllegalStateException e) {
             JSFUtil.adicionarMensagem(null, FacesMessage.SEVERITY_WARN, e.getMessage());
         } catch (RuntimeException e) {
             JSFUtil.adicionarMensagem(null, FacesMessage.SEVERITY_ERROR,
-                    "Falha ao enviar e-mail. Verifique as configurações de SMTP.");
+                    "Falha ao enviar e-mail. O erro foi registrado no histórico.");
+            carregarLista();
+            if (selecionado != null && selecionado.getId().equals(preCadastroId)) {
+                historico = preCadastroService.buscarHistorico(preCadastroId);
+            }
         }
+    }
+
+    public void prepararVisualizacao(Long preCadastroId) {
+        garantirAdmin();
+        selecionado = preCadastroService.buscarPorId(preCadastroId);
+        historico   = selecionado != null
+                ? preCadastroService.buscarHistorico(preCadastroId)
+                : Collections.emptyList();
     }
 
     public void limparFormulario() {
@@ -117,6 +137,8 @@ public class PreCadastroBean implements Serializable {
         }
     }
 
-    public PreCadastroFormDTO getForm()                    { return form; }
-    public List<PreCadastroProfissional> getLista()        { return lista; }
+    public PreCadastroFormDTO getForm()                         { return form; }
+    public List<PreCadastroProfissional> getLista()             { return lista; }
+    public PreCadastroProfissional getSelecionado()             { return selecionado; }
+    public List<EnvioConviteHistorico> getHistorico()           { return historico; }
 }

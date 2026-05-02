@@ -11,7 +11,7 @@
         <h:panelGroup layout="block" styleClass="panel-title">
             <i class="fa fa-list panel-icon"/>
             <h:outputText value="Pré-cadastros Registrados"/>
-            <h:panelGroup layout="block" styleClass="tools" style="margin-left:auto; display:flex; align-items:center; gap:6px;">
+            <h:panelGroup layout="block" style="margin-left:auto; display:flex; align-items:center; gap:6px;">
                 <span style="font-size:11px; color:#666; font-weight:normal;">Pendentes:</span>
                 <span class="chip pendente">
                     <h:outputText value="#{preCadastroBean.totalPendentes}"/>
@@ -34,16 +34,14 @@
                         <th style="width:80px;" class="center-align">Status</th>
                         <th style="width:90px;" class="center-align">Convite</th>
                         <th style="width:130px;">Criado em</th>
-                        <th style="width:80px;" class="center-align">Ações</th>
+                        <th style="width:95px;" class="center-align">Ações</th>
                     </tr>
                 </thead>
                 <tbody>
                     <ui:repeat value="#{preCadastroBean.lista}" var="pc">
                         <tr>
                             <td><h:outputText value="#{pc.nome}"/></td>
-                            <td>
-                                <h:outputText value="#{pc.tipoProfissional.descricao}"/>
-                            </td>
+                            <td><h:outputText value="#{pc.tipoProfissional.descricao}"/></td>
                             <td class="mono"><h:outputText value="#{pc.email}"/></td>
                             <td class="center-align">
                                 <h:panelGroup rendered="#{pc.status.name() == 'PENDENTE'}">
@@ -57,12 +55,16 @@
                                 </h:panelGroup>
                             </td>
                             <td class="center-align">
-                                <h:panelGroup rendered="#{pc.emailEnviado}">
+                                <h:panelGroup rendered="#{pc.emailEnviado and not pc.conviteExpirado}">
                                     <i class="fa fa-check" style="color:#2e7d32;"
-                                       title="Enviado em #{pc.dataEnvioEmailFormatada}"/>
+                                       title="Enviado em #{pc.dataEnvioEmailFormatada} — expira em #{pc.dataExpiracaoConviteFormatada}"/>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{pc.emailEnviado and pc.conviteExpirado}">
+                                    <i class="fa fa-exclamation-triangle" style="color:#e65100;"
+                                       title="Convite expirado em #{pc.dataExpiracaoConviteFormatada}"/>
                                 </h:panelGroup>
                                 <h:panelGroup rendered="#{not pc.emailEnviado}">
-                                    <i class="fa fa-times" style="color:#c62828;" title="Não enviado"/>
+                                    <i class="fa fa-minus" style="color:#bbb;" title="Não enviado"/>
                                 </h:panelGroup>
                             </td>
                             <td class="mono" style="font-size:11px;">
@@ -70,13 +72,23 @@
                             </td>
                             <td class="center-align">
                                 <h:form>
+                                    <!-- visualizar -->
+                                    <p:commandButton icon="fa fa-eye"
+                                                     title="Ver detalhes"
+                                                     styleClass="btn icon-btn"
+                                                     action="#{preCadastroBean.prepararVisualizacao(pc.id)}"
+                                                     process="@this"
+                                                     update=":dlgPreCadastro"
+                                                     oncomplete="PF('wDlgPreCadastro').show()"/>
+                                    <!-- enviar convite -->
                                     <p:commandButton icon="fa fa-envelope"
-                                                     title="Enviar convite por e-mail"
+                                                     title="Enviar convite"
                                                      styleClass="btn icon-btn primary"
                                                      action="#{preCadastroBean.enviarConvite(pc.id)}"
                                                      process="@this"
                                                      update=":msgs :panelListaPreCadastro"
                                                      rendered="#{pc.pendente and not pc.emailEnviado}"/>
+                                    <!-- reenviar convite -->
                                     <p:commandButton icon="fa fa-redo"
                                                      title="Reenviar convite"
                                                      styleClass="btn icon-btn secondary"
@@ -94,7 +106,7 @@
 
         <h:panelGroup layout="block" styleClass="note">
             <i class="fa fa-info-circle"/>
-            <h:outputText value=" Exibindo os 50 registros mais recentes. Use o botão de envelope para enviar o convite de cadastro ao profissional."/>
+            <h:outputText value=" Exibindo os 50 registros mais recentes. Links de convite expiram em 7 dias após o envio."/>
         </h:panelGroup>
 
     </h:panelGroup>

@@ -1,5 +1,6 @@
 package br.com.hsg.service.facade.admin;
 
+import br.com.hsg.domain.entity.EnvioConviteHistorico;
 import br.com.hsg.domain.entity.PreCadastroProfissional;
 import br.com.hsg.domain.enums.CategoriaCoren;
 import br.com.hsg.domain.enums.StatusPreCadastro;
@@ -31,7 +32,9 @@ public interface PreCadastroServiceFacade {
             Long idAdminCriador
     );
 
-    void enviarConvite(Long preCadastroId);
+    void enviarConvite(Long preCadastroId, Long idAdmin, String nomeAdmin);
+
+    List<EnvioConviteHistorico> buscarHistorico(Long preCadastroId);
 
     PreCadastroProfissional buscarPorToken(String token);
 

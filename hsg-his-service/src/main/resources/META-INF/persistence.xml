@@ -18,6 +18,7 @@
         <class>br.com.hsg.domain.entity.Alergia</class>
         <class>br.com.hsg.domain.entity.AlergiaHistorico</class>
         <class>br.com.hsg.domain.entity.PreCadastroProfissional</class>
+        <class>br.com.hsg.domain.entity.EnvioConviteHistorico</class>
 
         <properties>
             <property name="hibernate.dialect"        value="org.hibernate.dialect.PostgreSQL95Dialect"/>

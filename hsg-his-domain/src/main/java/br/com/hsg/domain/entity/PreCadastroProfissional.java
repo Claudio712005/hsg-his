@@ -103,6 +103,14 @@ public class PreCadastroProfissional {
     @Column(name = "DT_ENVIO_EMAIL")
     private LocalDateTime dataEnvioEmail;
 
+    @Getter
+    @Column(name = "DT_EXPIRACAO_CONVITE")
+    private LocalDateTime dataExpiracaoConvite;
+
+    @Getter
+    @Column(name = "QT_ENVIOS", nullable = false)
+    private int quantidadeEnvios;
+
     protected PreCadastroProfissional() {}
 
     public static PreCadastroProfissional criarParaMedico(
@@ -154,9 +162,18 @@ public class PreCadastroProfissional {
         return p;
     }
 
-    public void registrarEnvioEmail() {
-        this.emailEnviado   = true;
-        this.dataEnvioEmail = LocalDateTime.now();
+    // diasExpiracao: quantos dias o link ficará válido a partir do envio
+    public LocalDateTime registrarEnvioEmail(int diasExpiracao) {
+        LocalDateTime expiracao = LocalDateTime.now().plusDays(diasExpiracao);
+        this.emailEnviado          = true;
+        this.dataEnvioEmail        = LocalDateTime.now();
+        this.dataExpiracaoConvite  = expiracao;
+        this.quantidadeEnvios      = this.quantidadeEnvios + 1;
+        return expiracao;
+    }
+
+    public boolean isConviteExpirado() {
+        return dataExpiracaoConvite != null && LocalDateTime.now().isAfter(dataExpiracaoConvite);
     }
 
     public void concluir() {
@@ -187,5 +204,21 @@ public class PreCadastroProfissional {
     public String getDataEnvioEmailFormatada() {
         if (dataEnvioEmail == null) return "";
         return dataEnvioEmail.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+    }
+
+    public String getDataExpiracaoConviteFormatada() {
+        if (dataExpiracaoConvite == null) return "—";
+        return dataExpiracaoConvite.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+    }
+
+    public String getCrmFormatado() {
+        if (crm == null || ufCrm == null) return "—";
+        return "CRM-" + ufCrm + " " + crm;
+    }
+
+    public String getCorenFormatado() {
+        if (coren == null || ufCoren == null) return "—";
+        String cat = categoriaCoren != null ? "/" + categoriaCoren.name() : "";
+        return "COREN-" + ufCoren + " " + coren + cat;
     }
 }
