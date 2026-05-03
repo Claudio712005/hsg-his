@@ -21,7 +21,6 @@
 
             <h:panelGroup layout="block" styleClass="kv">
 
-                <!-- tipo de profissional -->
                 <h:panelGroup layout="block" styleClass="k">
                     <h:outputText value="Tipo de profissional"/>
                     <h:outputText value=" *" style="color:#c00;"/>
@@ -38,7 +37,7 @@
                                        var="tp"
                                        itemValue="#{tp}"
                                        itemLabel="#{tp.descricao}"/>
-                        <p:ajax event="change" render="camposDinamicos" process="tipoProfissional"/>
+                        <p:ajax event="change" render="camposDinamicos" update="camposDinamicos" process="tipoProfissional"/>
                     </p:selectOneMenu>
                     <p:message for="tipoProfissional" styleClass="field-error"/>
                 </h:panelGroup>
