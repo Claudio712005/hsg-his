@@ -91,6 +91,32 @@ public class AlergiaServiceImpl implements AlergiaServiceFacade {
         return p;
     }
 
+    @Override
+    public void aprovarAlergia(Long alergiaId, Long idAprovador, String observacao) {
+        Alergia alergia = requererAlergia(alergiaId);
+        alergia.aprovar(idAprovador, observacao);
+        alergiaDAO.atualizar(alergia);
+        historicoDAO.salvar(AlergiaHistorico.registrar(alergia, idAprovador, AcaoAlergia.APROVADA));
+    }
+
+    @Override
+    public void rejeitarAlergia(Long alergiaId, Long idAprovador, String observacao) {
+        Alergia alergia = requererAlergia(alergiaId);
+        alergia.rejeitar(idAprovador, observacao);
+        alergiaDAO.atualizar(alergia);
+        historicoDAO.salvar(AlergiaHistorico.registrar(alergia, idAprovador, AcaoAlergia.REJEITADA));
+    }
+
+    @Override
+    public List<Alergia> listarParaAprovacao(int inicio, int tamanho) {
+        return alergiaDAO.listarParaAprovacao(inicio, tamanho);
+    }
+
+    @Override
+    public long contarParaAprovacao() {
+        return alergiaDAO.contarParaAprovacao();
+    }
+
     private Alergia requererAlergia(Long id) {
         Alergia a = alergiaDAO.buscarPorId(id);
         if (a == null) throw new IllegalArgumentException("Alergia não encontrada.");

@@ -1,6 +1,7 @@
 package br.com.hsg.dao;
 
 import br.com.hsg.domain.entity.Alergia;
+import br.com.hsg.domain.enums.StatusAlergia;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -55,6 +56,24 @@ public class AlergiaDAO {
         return em.createQuery(
                 "SELECT COUNT(a) FROM Alergia a WHERE a.paciente.id = :pacienteId", Long.class)
                 .setParameter("pacienteId", pacienteId)
+                .getSingleResult();
+    }
+
+    public List<Alergia> listarParaAprovacao(int inicio, int tamanho) {
+        return em.createQuery(
+                "SELECT a FROM Alergia a JOIN FETCH a.paciente p " +
+                "WHERE a.statusAlergia = :st ORDER BY a.dataCadastro ASC",
+                Alergia.class)
+                .setParameter("st", StatusAlergia.INFORMADA)
+                .setFirstResult(inicio)
+                .setMaxResults(tamanho)
+                .getResultList();
+    }
+
+    public long contarParaAprovacao() {
+        return em.createQuery(
+                "SELECT COUNT(a) FROM Alergia a WHERE a.statusAlergia = :st", Long.class)
+                .setParameter("st", StatusAlergia.INFORMADA)
                 .getSingleResult();
     }
 }

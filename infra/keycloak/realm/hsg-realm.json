@@ -121,6 +121,7 @@
       "realmRoles": ["hsg-admin"]
     },
     {
+      "id":         "md000000-0000-0000-0000-000000000001",
       "username":   "dr.joao",
       "email":      "joao.silva@hsg.com.br",
       "firstName":  "João",
@@ -140,6 +141,7 @@
       }
     },
     {
+      "id":         "en000000-0000-0000-0000-000000000001",
       "username":   "enf.maria",
       "email":      "maria.santos@hsg.com.br",
       "firstName":  "Maria",
@@ -153,7 +155,10 @@
           "temporary": true
         }
       ],
-      "realmRoles": ["hsg-enfermeiro"]
+      "realmRoles": ["hsg-enfermeiro"],
+      "attributes": {
+        "coren": ["COREN-SP 654321/ENF"]
+      }
     },
     {
         "id":         "cf000000-0000-0000-0000-000000000001",

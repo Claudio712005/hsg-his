@@ -1,5 +1,7 @@
 embed-server --std-out=echo
 
+/system-property=APP_ENV:add(value=${env.APP_ENV:PROD})
+
 module add \
   --name=org.postgresql \
   --resources=/opt/postgresql.jar \

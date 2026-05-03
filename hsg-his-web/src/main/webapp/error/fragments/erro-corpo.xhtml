@@ -3,16 +3,34 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:h="http://xmlns.jcp.org/jsf/html">
-    <div class="panel" style="text-align:center; padding:60px 40px; margin:0 auto; max-width:560px;">
-        <div style="font-size:80px; font-weight:bold; color:#{corCodigo}; line-height:1; letter-spacing:-2px;">
-            #{codHttp}
-        </div>
-        <h2 style="margin:16px 0 8px; color:#1f3a68; font-size:20px;">#{titulo}</h2>
-        <p style="color:#666; margin-bottom:28px; font-size:13px;">#{mensagem}</p>
-        <a href="#{request.contextPath}/paciente/home.xhtml"
-           style="display:inline-block; padding:9px 22px; background:linear-gradient(#2d5fa8,#1f3a68); color:#fff; border-radius:4px; text-decoration:none; font-size:13px; font-weight:bold;">
-            Voltar ao Início
+
+    <div class="err-icon" style="color:#{corCodigo};">
+        <i class="fas #{icone}"/>
+    </div>
+
+    <div class="err-code" style="color:#{corCodigo};">#{codHttp}</div>
+
+    <div class="err-title">#{titulo}</div>
+    <div class="err-msg">#{mensagem}</div>
+
+    <div class="err-actions">
+
+        <!-- Botão Voltar ao Início: visível apenas se estiver logado -->
+        <h:panelGroup rendered="#{erroBean.exibirBotaoHome}">
+            <a href="#{erroBean.homeUrl}" class="err-btn primary">
+                <i class="fas fa-home"/>
+                Voltar ao Início
+            </a>
+        </h:panelGroup>
+
+        <div class="err-divider" style="#{erroBean.exibirBotaoHome ? '' : 'display:none;'}"/>
+
+        <!-- Botão Voltar ao Login: sempre visível, encerra sessão e redireciona ao Keycloak -->
+        <a href="#{request.contextPath}/logout" class="err-btn secondary">
+            <i class="fas fa-sign-in-alt"/>
+            Ir para o Login
         </a>
+
     </div>
 
 </ui:composition>

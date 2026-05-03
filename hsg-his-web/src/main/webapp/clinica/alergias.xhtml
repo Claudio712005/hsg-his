@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/WEB-INF/templates/clinica/layout.xhtml">
+
+    <ui:define name="title">HSG - Aprovação de Alergias</ui:define>
+
+    <ui:define name="breadcrumbItems">
+        <span class="sep">&#187;</span>
+        <span>Alergias Pendentes</span>
+    </ui:define>
+
+    <ui:define name="content">
+
+        <h:form id="mainForm">
+
+            <p:messages id="msgs" showDetail="true" closable="true"/>
+
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-allergies"/>
+                    Alergias Aguardando Validação
+                </h2>
+            </div>
+
+            <p:dataTable id="tabelaAlergias"
+                         var="al"
+                         value="#{aprovacaoAlergiaBean.model}"
+                         lazy="true"
+                         paginator="true"
+                         rows="10"
+                         rowsPerPageTemplate="10,20,50"
+                         paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         emptyMessage="Nenhuma alergia pendente de validação."
+                         styleClass="data-table">
+
+                <p:column headerText="Paciente" sortBy="#{al.nomePaciente}">
+                    <span>#{al.nomePaciente}</span>
+                </p:column>
+
+                <p:column headerText="Alergia" sortBy="#{al.nomeAlergia}">
+                    <strong>#{al.nomeAlergia}</strong>
+                </p:column>
+
+                <p:column headerText="Tipo">
+                    <span>#{al.tipoDescricao}</span>
+                </p:column>
+
+                <p:column headerText="Gravidade">
+                    <span class="badge #{al.gravidadeCssClass}">#{al.gravidadeDescricao}</span>
+                </p:column>
+
+                <p:column headerText="Cadastrado em">
+                    <span>#{al.dataCadastro}</span>
+                </p:column>
+
+                <p:column headerText="Ações" styleClass="col-acoes">
+                    <p:commandButton icon="fas fa-search"
+                                     title="Analisar"
+                                     styleClass="btn-icon"
+                                     process="@this"
+                                     update=":mainForm:dlgAnalise"
+                                     oncomplete="PF('wvDlgAnalise').show()">
+                        <f:setPropertyActionListener value="#{al}"
+                                                     target="#{aprovacaoAlergiaBean.alergiaEmAnalise}"/>
+                    </p:commandButton>
+                </p:column>
+
+            </p:dataTable>
+
+            <!-- Diálogo de análise (aprovar / rejeitar) -->
+            <p:dialog id="dlgAnalise"
+                      header="Análise de Alergia"
+                      widgetVar="wvDlgAnalise"
+                      modal="true"
+                      resizable="false"
+                      width="500"
+                      styleClass="dialog-form">
+
+                <p:outputPanel rendered="#{aprovacaoAlergiaBean.alergiaEmAnalise != null}">
+
+                    <div class="dialog-info-row">
+                        <span class="info-label">Paciente</span>
+                        <span class="info-value">#{aprovacaoAlergiaBean.alergiaEmAnalise.nomePaciente}</span>
+                    </div>
+                    <div class="dialog-info-row">
+                        <span class="info-label">Alergia</span>
+                        <span class="info-value">
+                            <strong>#{aprovacaoAlergiaBean.alergiaEmAnalise.nomeAlergia}</strong>
+                        </span>
+                    </div>
+                    <div class="dialog-info-row">
+                        <span class="info-label">Tipo</span>
+                        <span class="info-value">#{aprovacaoAlergiaBean.alergiaEmAnalise.tipoDescricao}</span>
+                    </div>
+                    <div class="dialog-info-row">
+                        <span class="info-label">Gravidade</span>
+                        <span class="info-value">
+                            <span class="badge #{aprovacaoAlergiaBean.alergiaEmAnalise.gravidadeCssClass}">
+                                #{aprovacaoAlergiaBean.alergiaEmAnalise.gravidadeDescricao}
+                            </span>
+                        </span>
+                    </div>
+                    <div class="dialog-info-row" style="margin-bottom:16px;">
+                        <span class="info-label">Obs. do paciente</span>
+                        <span class="info-value">
+                            #{empty aprovacaoAlergiaBean.alergiaEmAnalise.observacao
+                                ? '—'
+                                : aprovacaoAlergiaBean.alergiaEmAnalise.observacao}
+                        </span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Observação do profissional (opcional)</label>
+                        <p:inputTextarea id="obsAprovador"
+                                         value="#{aprovacaoAlergiaBean.observacaoAprovador}"
+                                         rows="3"
+                                         maxlength="500"
+                                         styleClass="form-input"
+                                         style="width:100%;"/>
+                    </div>
+
+                    <div class="dialog-footer">
+                        <p:commandButton value="Aprovar"
+                                         icon="fas fa-check"
+                                         styleClass="btn-primary"
+                                         action="#{aprovacaoAlergiaBean.confirmarAprovacao}"
+                                         process=":mainForm:dlgAnalise"
+                                         update=":mainForm:msgs :mainForm:tabelaAlergias"
+                                         oncomplete="if (!args.validationFailed) PF('wvDlgAnalise').hide()"/>
+
+                        <p:commandButton value="Rejeitar"
+                                         icon="fas fa-times"
+                                         styleClass="btn-secondary"
+                                         action="#{aprovacaoAlergiaBean.confirmarRejeicao}"
+                                         process=":mainForm:dlgAnalise"
+                                         update=":mainForm:msgs :mainForm:tabelaAlergias"
+                                         oncomplete="if (!args.validationFailed) PF('wvDlgAnalise').hide()"/>
+
+                        <p:commandButton value="Cancelar"
+                                         icon="fas fa-ban"
+                                         styleClass="btn-cancel"
+                                         onclick="PF('wvDlgAnalise').hide(); return false;"
+                                         type="button"/>
+                    </div>
+
+                </p:outputPanel>
+
+            </p:dialog>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>
