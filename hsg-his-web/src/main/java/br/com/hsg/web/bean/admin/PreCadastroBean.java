@@ -50,7 +50,7 @@ public class PreCadastroBean implements Serializable {
             if (form.isMedico()) {
                 preCadastroService.criarParaMedico(
                         form.getNome(),
-                        form.getEmail(),
+                        form.getEmailPessoal(),
                         form.getCpf(),
                         form.getCrm(),
                         form.getUfCrm() != null ? form.getUfCrm().getSigla() : null,
@@ -59,7 +59,7 @@ public class PreCadastroBean implements Serializable {
             } else if (form.isEnfermeiro()) {
                 preCadastroService.criarParaEnfermeiro(
                         form.getNome(),
-                        form.getEmail(),
+                        form.getEmailPessoal(),
                         form.getCpf(),
                         form.getCoren(),
                         form.getUfCoren() != null ? form.getUfCoren().getSigla() : null,

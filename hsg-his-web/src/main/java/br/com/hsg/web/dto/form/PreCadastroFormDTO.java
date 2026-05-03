@@ -15,24 +15,21 @@ public class PreCadastroFormDTO implements Serializable {
 
     private TipoProfissional tipoProfissional;
 
-    // campos comuns
     private String nome;
-    private String email;
+    private String emailPessoal;
     private String cpf;
 
-    // campos de médico
     private String crm;
     private Estado ufCrm;
     private EspecialidadeMedica especialidade;
 
-    // campos de enfermeiro
     private String coren;
     private Estado ufCoren;
     private CategoriaCoren categoriaCoren;
 
     public void limpar() {
         tipoProfissional = null;
-        nome = email = cpf = null;
+        nome = emailPessoal = cpf = null;
         crm = null;
         ufCrm = null;
         especialidade = null;

@@ -7,6 +7,7 @@ import br.com.hsg.domain.entity.PreCadastroProfissional;
 import br.com.hsg.domain.enums.CategoriaCoren;
 import br.com.hsg.domain.enums.StatusPreCadastro;
 import br.com.hsg.domain.enums.TipoProfissional;
+import br.com.hsg.service.email.EmailCorporativoService;
 import br.com.hsg.service.facade.admin.PreCadastroServiceFacade;
 import br.com.hsg.service.mail.MailService;
 
@@ -23,39 +24,46 @@ public class PreCadastroServiceImpl implements PreCadastroServiceFacade {
     @EJB private PreCadastroProfissionalDAO preCadastroDAO;
     @EJB private EnvioConviteHistoricoDAO   historicoDAO;
     @EJB private MailService                mailService;
+    @EJB private EmailCorporativoService    emailCorporativoService;
 
     @Override
     public PreCadastroProfissional criarParaMedico(
-            String nome, String email, String cpf,
+            String nome, String emailPessoal, String cpf,
             String crm, String ufCrm, String especialidade, Long idAdminCriador) {
 
-        validarCamposComuns(nome, email, cpf, idAdminCriador);
+        validarCamposComuns(nome, emailPessoal, cpf, idAdminCriador);
         validarCamposMedico(crm, ufCrm);
-        validarDuplicidade(email, cpf);
+        validarDuplicidade(emailPessoal, cpf);
 
         PreCadastroProfissional p = PreCadastroProfissional.criarParaMedico(
-                nome.trim(), email.trim().toLowerCase(), cpf.trim(),
+                nome.trim(), emailPessoal.trim().toLowerCase(), cpf.trim(),
                 crm.trim(), ufCrm.trim().toUpperCase(), especialidade,
                 idAdminCriador);
 
-        return preCadastroDAO.salvar(p);
+        p = preCadastroDAO.salvar(p);
+
+        p.definirEmailCorporativo(emailCorporativoService.gerar(nome));
+        return preCadastroDAO.atualizar(p);
     }
 
     @Override
     public PreCadastroProfissional criarParaEnfermeiro(
-            String nome, String email, String cpf,
+            String nome, String emailPessoal, String cpf,
             String coren, String ufCoren, CategoriaCoren categoriaCoren, Long idAdminCriador) {
 
-        validarCamposComuns(nome, email, cpf, idAdminCriador);
+        validarCamposComuns(nome, emailPessoal, cpf, idAdminCriador);
         validarCamposEnfermeiro(coren, ufCoren, categoriaCoren);
-        validarDuplicidade(email, cpf);
+        validarDuplicidade(emailPessoal, cpf);
 
         PreCadastroProfissional p = PreCadastroProfissional.criarParaEnfermeiro(
-                nome.trim(), email.trim().toLowerCase(), cpf.trim(),
+                nome.trim(), emailPessoal.trim().toLowerCase(), cpf.trim(),
                 coren.trim(), ufCoren.trim().toUpperCase(), categoriaCoren,
                 idAdminCriador);
 
-        return preCadastroDAO.salvar(p);
+        p = preCadastroDAO.salvar(p);
+
+        p.definirEmailCorporativo(emailCorporativoService.gerar(nome));
+        return preCadastroDAO.atualizar(p);
     }
 
     @Override
@@ -71,9 +79,10 @@ public class PreCadastroServiceImpl implements PreCadastroServiceFacade {
         try {
             mailService.enviarConviteProfissional(
                     preCadastro.getNome(),
-                    preCadastro.getEmail(),
+                    preCadastro.getEmailPessoal(),
                     preCadastro.getTipoProfissional(),
-                    preCadastro.getTokenConvite());
+                    preCadastro.getTokenConvite(),
+                    preCadastro.getEmailCorporativo());
 
             preCadastro.registrarEnvioEmail(DIAS_EXPIRACAO_CONVITE);
             preCadastroDAO.atualizar(preCadastro);
@@ -132,11 +141,11 @@ public class PreCadastroServiceImpl implements PreCadastroServiceFacade {
         return preCadastroDAO.contarPorStatus(status);
     }
 
-    private void validarCamposComuns(String nome, String email, String cpf, Long idAdmin) {
+    private void validarCamposComuns(String nome, String emailPessoal, String cpf, Long idAdmin) {
         if (nome == null || nome.trim().isEmpty())
             throw new IllegalArgumentException("Nome é obrigatório.");
-        if (email == null || !email.contains("@"))
-            throw new IllegalArgumentException("E-mail inválido.");
+        if (emailPessoal == null || !emailPessoal.contains("@"))
+            throw new IllegalArgumentException("E-mail pessoal inválido.");
         if (cpf == null || cpf.trim().isEmpty())
             throw new IllegalArgumentException("CPF é obrigatório.");
         if (idAdmin == null)
@@ -159,9 +168,9 @@ public class PreCadastroServiceImpl implements PreCadastroServiceFacade {
             throw new IllegalArgumentException("Categoria do COREN é obrigatória para enfermeiros.");
     }
 
-    private void validarDuplicidade(String email, String cpf) {
-        if (preCadastroDAO.existeEmailPendente(email.trim().toLowerCase()))
-            throw new IllegalStateException("Já existe um pré-cadastro pendente para este e-mail.");
+    private void validarDuplicidade(String emailPessoal, String cpf) {
+        if (preCadastroDAO.existeEmailPendente(emailPessoal.trim().toLowerCase()))
+            throw new IllegalStateException("Já existe um pré-cadastro pendente para este e-mail pessoal.");
         if (preCadastroDAO.existeCpfPendente(cpf.trim()))
             throw new IllegalStateException("Já existe um pré-cadastro pendente para este CPF.");
     }

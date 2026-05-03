@@ -72,7 +72,6 @@
 
             </p:dataTable>
 
-            <!-- Diálogo de análise (aprovar / rejeitar) -->
             <p:dialog id="dlgAnalise"
                       header="Análise de Alergia"
                       widgetVar="wvDlgAnalise"
@@ -109,8 +108,8 @@
                         <span class="info-label">Obs. do paciente</span>
                         <span class="info-value">
                             #{empty aprovacaoAlergiaBean.alergiaEmAnalise.observacao
-                                ? '—'
-                                : aprovacaoAlergiaBean.alergiaEmAnalise.observacao}
+                                    ? '—'
+                                    : aprovacaoAlergiaBean.alergiaEmAnalise.observacao}
                         </span>
                     </div>
 

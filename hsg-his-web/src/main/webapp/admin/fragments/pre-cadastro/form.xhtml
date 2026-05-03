@@ -37,12 +37,11 @@
                                        var="tp"
                                        itemValue="#{tp}"
                                        itemLabel="#{tp.descricao}"/>
-                        <p:ajax event="change" render="camposDinamicos" update="camposDinamicos" process="tipoProfissional"/>
+                        <p:ajax event="change" update="camposDinamicos" process="tipoProfissional"/>
                     </p:selectOneMenu>
                     <p:message for="tipoProfissional" styleClass="field-error"/>
                 </h:panelGroup>
 
-                <!-- nome -->
                 <h:panelGroup layout="block" styleClass="k">
                     <h:outputText value="Nome completo"/>
                     <h:outputText value=" *" style="color:#c00;"/>
@@ -58,26 +57,25 @@
                     <p:message for="nome" styleClass="field-error"/>
                 </h:panelGroup>
 
-                <!-- e-mail -->
                 <h:panelGroup layout="block" styleClass="k">
-                    <h:outputText value="E-mail"/>
+                    <h:outputText value="E-mail pessoal"/>
                     <h:outputText value=" *" style="color:#c00;"/>
                 </h:panelGroup>
                 <h:panelGroup layout="block" styleClass="v">
-                    <p:inputText id="email"
-                                 value="#{preCadastroBean.form.email}"
+                    <p:inputText id="emailPessoal"
+                                 value="#{preCadastroBean.form.emailPessoal}"
                                  styleClass="input-field"
                                  style="width:100%;"
                                  maxlength="255"
                                  required="true"
-                                 requiredMessage="E-mail é obrigatório.">
+                                 requiredMessage="E-mail pessoal é obrigatório."
+                                 title="Utilizado para o envio do convite de ativação">
                         <f:validateRegex pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}"
                                          message="Informe um e-mail válido."/>
                     </p:inputText>
-                    <p:message for="email" styleClass="field-error"/>
+                    <p:message for="emailPessoal" styleClass="field-error"/>
                 </h:panelGroup>
 
-                <!-- CPF -->
                 <h:panelGroup layout="block" styleClass="k">
                     <h:outputText value="CPF"/>
                     <h:outputText value=" *" style="color:#c00;"/>
@@ -96,7 +94,6 @@
 
             </h:panelGroup>
 
-            <!-- campos dinâmicos renderizados via ajax -->
             <h:panelGroup id="camposDinamicos" layout="block">
                 <ui:include src="campos-medico.xhtml"/>
                 <ui:include src="campos-enfermeiro.xhtml"/>

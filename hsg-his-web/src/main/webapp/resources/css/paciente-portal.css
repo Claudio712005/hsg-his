@@ -539,7 +539,6 @@ table.data tbody tr:hover td { background: #eaf1fa; }
 
 .shell { padding-bottom: 22px; }
 
-/* --- Stat Cards (Admin Dashboard) --- */
 .stat-cards {
     display: grid;
     grid-template-columns: repeat(4, 1fr);

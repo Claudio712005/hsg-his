@@ -1,9 +1,7 @@
--- Adiciona campos de controle de expiração e contagem de envios ao pré-cadastro.
 ALTER TABLE hsg.tb_pre_cad_prof
     ADD COLUMN dt_expiracao_convite TIMESTAMP,
     ADD COLUMN qt_envios            INTEGER NOT NULL DEFAULT 0;
 
--- Histórico de cada tentativa de envio de convite (sucesso, erro, expiração, aceite).
 CREATE SEQUENCE hsg.seq_env_conv_hist
     START WITH 1
     INCREMENT BY 1

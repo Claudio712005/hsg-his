@@ -51,7 +51,6 @@ public class AlergiaServiceImplTest {
                 TipoAlergia.M, GravidadeAlergia.G, null, null, null);
     }
 
-    // ── informarAlergia ──────────────────────────────────────────────────────
 
     @Test
     public void informarAlergia_deveSalvarAlergiaEHistorico() {
@@ -91,7 +90,6 @@ public class AlergiaServiceImplTest {
                 TipoAlergia.M, null, null, null, null);
     }
 
-    // ── aprovarAlergia ───────────────────────────────────────────────────────
 
     @Test
     public void aprovarAlergia_deveAtualizarAlergiaESalvarHistorico() {
@@ -112,7 +110,6 @@ public class AlergiaServiceImplTest {
         service.aprovarAlergia(999L, 99L, "ok");
     }
 
-    // ── rejeitarAlergia ──────────────────────────────────────────────────────
 
     @Test
     public void rejeitarAlergia_deveAtualizarAlergiaESalvarHistorico() {
@@ -132,8 +129,6 @@ public class AlergiaServiceImplTest {
         when(alergiaDAO.buscarPorId(999L)).thenReturn(null);
         service.rejeitarAlergia(999L, 99L, "ok");
     }
-
-    // ── excluirAlergia ───────────────────────────────────────────────────────
 
     @Test
     public void excluirAlergia_deveExcluirAlergiaInformada() {
