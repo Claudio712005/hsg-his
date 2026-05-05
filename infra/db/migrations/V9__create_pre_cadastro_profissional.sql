@@ -1,7 +1,3 @@
--- Pré-cadastro de profissionais (médicos e enfermeiros).
--- Tabela única com discriminador tp_profissional (Opção B).
--- Campos específicos de cada tipo são nullable e validados pela camada de serviço.
-
 CREATE SEQUENCE hsg.seq_pre_cad_prof
     START WITH 1
     INCREMENT BY 1
@@ -11,25 +7,22 @@ CREATE SEQUENCE hsg.seq_pre_cad_prof
 
 CREATE TABLE hsg.tb_pre_cad_prof (
     id_pre_cad_prof      BIGINT       NOT NULL DEFAULT nextval('hsg.seq_pre_cad_prof'),
-    tp_profissional      VARCHAR(12)  NOT NULL,               -- MEDICO | ENFERMEIRO
+    tp_profissional      VARCHAR(12)  NOT NULL,
     nm_profissional      VARCHAR(255) NOT NULL,
     ds_email_prof        VARCHAR(255) NOT NULL,
     nr_cpf_prof          VARCHAR(14)  NOT NULL,
 
-    -- campos específicos de Médico
     nr_crm_prof          VARCHAR(20),
     uf_crm_prof          CHAR(2),
     ds_especialidade_prof VARCHAR(100),
 
-    -- campos específicos de Enfermeiro
     nr_coren_prof        VARCHAR(20),
     uf_coren_prof        CHAR(2),
-    cat_coren_prof       VARCHAR(3),                          -- ENF | TEC | AUX
+    cat_coren_prof       VARCHAR(3),
 
-    -- controle do pré-cadastro
     id_adm_criador       BIGINT       NOT NULL,
     dt_criacao           TIMESTAMP    NOT NULL DEFAULT NOW(),
-    st_pre_cad           VARCHAR(10)  NOT NULL DEFAULT 'PENDENTE', -- PENDENTE | CONCLUIDO | EXPIRADO
+    st_pre_cad           VARCHAR(10)  NOT NULL DEFAULT 'PENDENTE',
     token_convite        VARCHAR(36)  NOT NULL,
     fl_email_enviado     BOOLEAN      NOT NULL DEFAULT FALSE,
     dt_envio_email       TIMESTAMP,

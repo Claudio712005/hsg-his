@@ -16,7 +16,6 @@
 
         <h:panelGroup layout="block" styleClass="kv">
 
-            <!-- COREN -->
             <h:panelGroup layout="block" styleClass="k">
                 <h:outputText value="Número do COREN"/>
                 <h:outputText value=" *" style="color:#c00;"/>
@@ -25,15 +24,19 @@
                 <p:inputText id="coren"
                              value="#{preCadastroBean.form.coren}"
                              styleClass="input-field mono"
-                             style="width:180px;"
-                             maxlength="20"
+                             style="width:160px;"
+                             maxlength="10"
                              required="#{preCadastroBean.form.enfermeiro}"
                              requiredMessage="COREN é obrigatório para enfermeiros."
-                             placeholder="Ex: 654321"/>
+                             placeholder="Ex: 654321">
+                    <p:keyFilter mask="pint"/>
+                </p:inputText>
                 <p:message for="coren" styleClass="field-error"/>
+                <div style="font-size:11px; color:#888; margin-top:2px;">
+                    Apenas o número de registro, sem prefixo "COREN" ou UF
+                </div>
             </h:panelGroup>
 
-            <!-- UF do COREN -->
             <h:panelGroup layout="block" styleClass="k">
                 <h:outputText value="UF do COREN"/>
                 <h:outputText value=" *" style="color:#c00;"/>
@@ -42,7 +45,7 @@
                 <p:selectOneMenu id="ufCoren"
                                  value="#{preCadastroBean.form.ufCoren}"
                                  styleClass="input-field"
-                                 style="width:240px;"
+                                 style="width:260px;"
                                  required="#{preCadastroBean.form.enfermeiro}"
                                  requiredMessage="UF do COREN é obrigatória.">
                     <f:selectItem itemLabel="Selecione o estado..." itemValue="#{null}" noSelectionOption="true"/>
@@ -52,9 +55,11 @@
                                    itemLabel="#{e.sigla} — #{e.nome}"/>
                 </p:selectOneMenu>
                 <p:message for="ufCoren" styleClass="field-error"/>
+                <div style="font-size:11px; color:#888; margin-top:2px;">
+                    Estado onde o COREN foi emitido
+                </div>
             </h:panelGroup>
 
-            <!-- Categoria -->
             <h:panelGroup layout="block" styleClass="k">
                 <h:outputText value="Categoria"/>
                 <h:outputText value=" *" style="color:#c00;"/>
@@ -66,13 +71,16 @@
                                  style="width:280px;"
                                  required="#{preCadastroBean.form.enfermeiro}"
                                  requiredMessage="Categoria do COREN é obrigatória.">
-                    <f:selectItem itemLabel="Selecione..." itemValue="#{null}" noSelectionOption="true"/>
+                    <f:selectItem itemLabel="Selecione a categoria..." itemValue="#{null}" noSelectionOption="true"/>
                     <f:selectItems value="#{preCadastroBean.categoriasCoren}"
                                    var="cat"
                                    itemValue="#{cat}"
                                    itemLabel="#{cat.descricao}"/>
                 </p:selectOneMenu>
                 <p:message for="categoriaCoren" styleClass="field-error"/>
+                <div style="font-size:11px; color:#888; margin-top:2px;">
+                    ENF = Enfermeiro · TEC = Técnico de Enfermagem · AUX = Auxiliar
+                </div>
             </h:panelGroup>
 
         </h:panelGroup>

@@ -16,7 +16,6 @@
 
         <h:panelGroup layout="block" styleClass="kv">
 
-            <!-- CRM -->
             <h:panelGroup layout="block" styleClass="k">
                 <h:outputText value="Número do CRM"/>
                 <h:outputText value=" *" style="color:#c00;"/>
@@ -25,15 +24,19 @@
                 <p:inputText id="crm"
                              value="#{preCadastroBean.form.crm}"
                              styleClass="input-field mono"
-                             style="width:180px;"
-                             maxlength="20"
+                             style="width:160px;"
+                             maxlength="10"
                              required="#{preCadastroBean.form.medico}"
                              requiredMessage="CRM é obrigatório para médicos."
-                             placeholder="Ex: 123456"/>
+                             placeholder="Ex: 123456">
+                    <p:keyFilter mask="pint"/>
+                </p:inputText>
                 <p:message for="crm" styleClass="field-error"/>
+                <div style="font-size:11px; color:#888; margin-top:2px;">
+                    Apenas o número de registro, sem prefixo "CRM" ou UF
+                </div>
             </h:panelGroup>
 
-            <!-- UF do CRM -->
             <h:panelGroup layout="block" styleClass="k">
                 <h:outputText value="UF do CRM"/>
                 <h:outputText value=" *" style="color:#c00;"/>
@@ -42,7 +45,7 @@
                 <p:selectOneMenu id="ufCrm"
                                  value="#{preCadastroBean.form.ufCrm}"
                                  styleClass="input-field"
-                                 style="width:240px;"
+                                 style="width:260px;"
                                  required="#{preCadastroBean.form.medico}"
                                  requiredMessage="UF do CRM é obrigatória.">
                     <f:selectItem itemLabel="Selecione o estado..." itemValue="#{null}" noSelectionOption="true"/>
@@ -52,9 +55,11 @@
                                    itemLabel="#{e.sigla} — #{e.nome}"/>
                 </p:selectOneMenu>
                 <p:message for="ufCrm" styleClass="field-error"/>
+                <div style="font-size:11px; color:#888; margin-top:2px;">
+                    Estado onde o CRM foi emitido
+                </div>
             </h:panelGroup>
 
-            <!-- Especialidade -->
             <h:panelGroup layout="block" styleClass="k">
                 <h:outputText value="Especialidade"/>
                 <h:outputText value=" (opcional)" styleClass="muted"/>
@@ -70,6 +75,9 @@
                                    itemValue="#{esp}"
                                    itemLabel="#{esp.descricao}"/>
                 </p:selectOneMenu>
+                <div style="font-size:11px; color:#888; margin-top:2px;">
+                    Especialidade principal conforme título CFM
+                </div>
             </h:panelGroup>
 
         </h:panelGroup>

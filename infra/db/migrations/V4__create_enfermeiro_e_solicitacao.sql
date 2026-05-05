@@ -41,18 +41,15 @@ CREATE TABLE hsg.tb_solic_atl (
     id_pac              BIGINT          NOT NULL,
     id_enfer            BIGINT,
 
-    -- dados propostos (cadastrais)
     frt_nm_solic_atl    VARCHAR(100),
     lst_nm_solic_atl    VARCHAR(150),
     ds_email_atl        VARCHAR(255),
     nr_tel_atl          VARCHAR(20),
 
-    -- snapshot dos dados atuais do paciente no momento da solicitação
     snp_nome_completo   VARCHAR(250),
     snp_email           VARCHAR(255),
     snp_tel             VARCHAR(20),
 
-    -- endereço proposto
     ds_logr_prop        VARCHAR(200),
     nr_prop             VARCHAR(10),
     ds_compl_prop       VARCHAR(100),
@@ -61,7 +58,6 @@ CREATE TABLE hsg.tb_solic_atl (
     sg_estado_prop      VARCHAR(2),
     nr_cep_prop         VARCHAR(8),
 
-    -- snapshot do endereço atual
     snp_logr            VARCHAR(200),
     snp_nr              VARCHAR(10),
     snp_compl           VARCHAR(100),
@@ -70,17 +66,14 @@ CREATE TABLE hsg.tb_solic_atl (
     snp_estado          VARCHAR(2),
     snp_cep             VARCHAR(8),
 
-    -- dados clínicos propostos
     vl_peso_prop        DOUBLE PRECISION,
     vl_altura_prop      DOUBLE PRECISION,
     tp_sang_prop        VARCHAR(10),
 
-    -- snapshot dos dados clínicos atuais
     snp_peso            DOUBLE PRECISION,
     snp_altura          DOUBLE PRECISION,
     snp_tp_sang         VARCHAR(10),
 
-    -- cancelamento
     ds_mot_cancel       VARCHAR(500),
     id_cancelador       BIGINT,
     tp_cancelador       VARCHAR(10),

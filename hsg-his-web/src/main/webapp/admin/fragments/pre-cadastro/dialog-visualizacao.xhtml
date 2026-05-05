@@ -58,6 +58,16 @@
             font-size: 10.5px;
             border-top: 1px dashed #ffb3b3;
         }
+        .email-corp-badge {
+            display: inline-block;
+            background: #e8f4fd;
+            border: 1px solid #b3d9f5;
+            border-radius: 3px;
+            padding: 2px 8px;
+            font-family: monospace;
+            font-size: 12px;
+            color: #1a6b8a;
+        }
     </style>
 
     <p:dialog id="dlgPreCadastro"
@@ -79,7 +89,6 @@
 
             <h:panelGroup layout="block" rendered="#{preCadastroBean.selecionado != null}">
 
-                <!-- ── Dados Gerais ───────────────────────────────────────── -->
                 <div class="dlg-section">
                     <div class="dlg-section-title">
                         <i class="fa fa-id-card"/>
@@ -96,9 +105,21 @@
                             <h:outputText value="#{preCadastroBean.selecionado.tipoProfissional.descricao}"/>
                         </h:panelGroup>
 
-                        <h:panelGroup layout="block" styleClass="k"><h:outputText value="E-mail"/></h:panelGroup>
+                        <h:panelGroup layout="block" styleClass="k"><h:outputText value="E-mail pessoal"/></h:panelGroup>
                         <h:panelGroup layout="block" styleClass="v mono">
-                            <h:outputText value="#{preCadastroBean.selecionado.email}"/>
+                            <h:outputText value="#{preCadastroBean.selecionado.emailPessoal}"/>
+                        </h:panelGroup>
+
+                        <h:panelGroup layout="block" styleClass="k"><h:outputText value="E-mail corporativo"/></h:panelGroup>
+                        <h:panelGroup layout="block" styleClass="v">
+                            <h:panelGroup rendered="#{not empty preCadastroBean.selecionado.emailCorporativo}">
+                                <span class="email-corp-badge">
+                                    <h:outputText value="#{preCadastroBean.selecionado.emailCorporativo}"/>
+                                </span>
+                            </h:panelGroup>
+                            <h:panelGroup rendered="#{empty preCadastroBean.selecionado.emailCorporativo}">
+                                <h:outputText value="—" style="color:#888;"/>
+                            </h:panelGroup>
                         </h:panelGroup>
 
                         <h:panelGroup layout="block" styleClass="k"><h:outputText value="CPF"/></h:panelGroup>
@@ -126,7 +147,6 @@
                     </h:panelGroup>
                 </div>
 
-                <!-- ── Dados Profissionais (Médico) ───────────────────────── -->
                 <div class="dlg-section" style="#{preCadastroBean.selecionado.medico ? '' : 'display:none;'}">
                     <h:panelGroup layout="block" rendered="#{preCadastroBean.selecionado.medico}">
                         <div class="dlg-section-title">
@@ -147,7 +167,6 @@
                     </h:panelGroup>
                 </div>
 
-                <!-- ── Dados Profissionais (Enfermeiro) ───────────────────── -->
                 <h:panelGroup layout="block" styleClass="dlg-section"
                               rendered="#{preCadastroBean.selecionado.enfermeiro}">
                     <div class="dlg-section-title">
@@ -167,7 +186,6 @@
                     </h:panelGroup>
                 </h:panelGroup>
 
-                <!-- ── Situação do Convite ────────────────────────────────── -->
                 <div class="dlg-section">
                     <div class="dlg-section-title">
                         <i class="fa fa-envelope"/>
@@ -210,7 +228,6 @@
                     </h:panelGroup>
                 </div>
 
-                <!-- ── Histórico de Envios ────────────────────────────────── -->
                 <div class="dlg-section" style="border-bottom:0;">
                     <div class="dlg-section-title">
                         <i class="fa fa-history"/>

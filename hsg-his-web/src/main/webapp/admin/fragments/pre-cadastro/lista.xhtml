@@ -29,8 +29,9 @@
                 <thead>
                     <tr>
                         <th>Nome</th>
-                        <th style="width:100px;">Tipo</th>
-                        <th style="width:210px;">E-mail</th>
+                        <th style="width:90px;">Tipo</th>
+                        <th style="width:185px;">E-mail pessoal</th>
+                        <th style="width:185px;">E-mail corporativo</th>
                         <th style="width:80px;" class="center-align">Status</th>
                         <th style="width:90px;" class="center-align">Convite</th>
                         <th style="width:130px;">Criado em</th>
@@ -42,7 +43,17 @@
                         <tr>
                             <td><h:outputText value="#{pc.nome}"/></td>
                             <td><h:outputText value="#{pc.tipoProfissional.descricao}"/></td>
-                            <td class="mono"><h:outputText value="#{pc.email}"/></td>
+                            <td class="mono" style="font-size:11px;">
+                                <h:outputText value="#{pc.emailPessoal}"/>
+                            </td>
+                            <td class="mono" style="font-size:11px;">
+                                <h:panelGroup rendered="#{not empty pc.emailCorporativo}">
+                                    <h:outputText value="#{pc.emailCorporativo}"/>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{empty pc.emailCorporativo}">
+                                    <span style="color:#bbb;">—</span>
+                                </h:panelGroup>
+                            </td>
                             <td class="center-align">
                                 <h:panelGroup rendered="#{pc.status.name() == 'PENDENTE'}">
                                     <span class="chip pendente">Pendente</span>
@@ -72,7 +83,6 @@
                             </td>
                             <td class="center-align">
                                 <h:form>
-                                    <!-- visualizar -->
                                     <p:commandButton icon="fa fa-eye"
                                                      title="Ver detalhes"
                                                      styleClass="btn icon-btn"
@@ -80,7 +90,6 @@
                                                      process="@this"
                                                      update=":dlgPreCadastro"
                                                      oncomplete="PF('wDlgPreCadastro').show()"/>
-                                    <!-- enviar convite -->
                                     <p:commandButton icon="fa fa-envelope"
                                                      title="Enviar convite"
                                                      styleClass="btn icon-btn primary"
@@ -88,7 +97,6 @@
                                                      process="@this"
                                                      update=":msgs :panelListaPreCadastro"
                                                      rendered="#{pc.pendente and not pc.emailEnviado}"/>
-                                    <!-- reenviar convite -->
                                     <p:commandButton icon="fa fa-redo"
                                                      title="Reenviar convite"
                                                      styleClass="btn icon-btn secondary"

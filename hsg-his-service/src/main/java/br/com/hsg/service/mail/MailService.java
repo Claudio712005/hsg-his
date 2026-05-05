@@ -21,13 +21,23 @@ public class MailService {
     @Resource(lookup = "java:jboss/mail/Default")
     private Session mailSession;
 
-    private static final String REMETENTE  = "noreply@hsg-his.com.br";
-    private static final String BASE_URL   = System.getenv().getOrDefault("HSG_BASE_URL", "http://localhost:8180/hsg-his");
+    private static final String REMETENTE = "noreply@hsg-his.com.br";
+    private static final String BASE_URL  = System.getenv().getOrDefault("HSG_BASE_URL", "http://localhost:8180/hsg-his");
 
-    public void enviarConviteProfissional(String nome, String email, TipoProfissional tipo, String token) {
+    /**
+     * Envia o convite de ativação para o e-mail pessoal do profissional.
+     * O e-mail corporativo (login futuro) é exibido no corpo da mensagem.
+     */
+    public void enviarConviteProfissional(
+            String nome,
+            String emailPessoal,
+            TipoProfissional tipo,
+            String token,
+            String emailCorporativo) {
+
         String assunto = "Convite de cadastro — HSG Hospital Information System";
-        String corpo   = montarCorpoConvite(nome, tipo, token);
-        enviar(email, assunto, corpo);
+        String corpo   = montarCorpoConvite(nome, tipo, token, emailCorporativo);
+        enviar(emailPessoal, assunto, corpo);
     }
 
     private void enviar(String destinatario, String assunto, String corpo) {
@@ -44,15 +54,27 @@ public class MailService {
         }
     }
 
-    private String montarCorpoConvite(String nome, TipoProfissional tipo, String token) {
-        String linkAtivacao = BASE_URL + "/public/ativacao-profissional.xhtml?token=" + token;
+    private String montarCorpoConvite(
+            String nome, TipoProfissional tipo, String token, String emailCorporativo) {
+
+        String linkAtivacao    = BASE_URL + "/public/ativacao-profissional.xhtml?token=" + token;
         String tipoProfissional = tipo.getDescricao();
 
-        return "<!DOCTYPE html><html><head><meta charset='UTF-8'/></head><body style='font-family:Arial,sans-serif;color:#333;'>"
+        String blocoEmailCorp = emailCorporativo != null
+                ? "<div style='background:#f0f7ff;border:1px solid #cce0ff;border-radius:4px;padding:12px 16px;margin:20px 0;'>"
+                  + "<p style='margin:0 0 4px;font-size:12px;color:#555;'>Seu e-mail corporativo (login no sistema) será:</p>"
+                  + "<p style='margin:0;font-size:15px;font-weight:bold;color:#1a6b8a;font-family:monospace;'>"
+                  + emailCorporativo + "</p>"
+                  + "</div>"
+                : "";
+
+        return "<!DOCTYPE html><html><head><meta charset='UTF-8'/></head>"
+                + "<body style='font-family:Arial,sans-serif;color:#333;'>"
                 + "<div style='max-width:600px;margin:40px auto;padding:32px;border:1px solid #e0e0e0;border-radius:8px;'>"
                 + "<h2 style='color:#1a6b8a;'>Convite de cadastro — HSG HIS</h2>"
                 + "<p>Olá, <strong>" + nome + "</strong>.</p>"
                 + "<p>Você foi convidado(a) pela administração do sistema HSG para completar seu cadastro como <strong>" + tipoProfissional + "</strong>.</p>"
+                + blocoEmailCorp
                 + "<p>Clique no botão abaixo para acessar o formulário de cadastro:</p>"
                 + "<p style='text-align:center;margin:32px 0;'>"
                 + "<a href='" + linkAtivacao + "' style='background:#1a6b8a;color:#fff;padding:12px 28px;border-radius:4px;text-decoration:none;font-weight:bold;'>Completar cadastro</a>"

@@ -1,14 +1,5 @@
 package br.com.hsg.domain.entity;
 
-/*
- * Decisão arquitetural: Opção B — tabela única com discriminador tipo_profissional.
- *
- * Justificativa: os campos comuns (nome, email, cpf, status, token, admin, datas de controle)
- * superam numericamente os específicos por tipo (3 campos para médico, 3 para enfermeiro).
- * Uma tabela única simplifica queries de listagem, o service e a UI. Os campos específicos
- * ficam nullable e são validados no service de acordo com o tipo selecionado.
- */
-
 import br.com.hsg.domain.enums.CategoriaCoren;
 import br.com.hsg.domain.enums.StatusPreCadastro;
 import br.com.hsg.domain.enums.TipoProfissional;
@@ -40,14 +31,16 @@ public class PreCadastroProfissional {
     private String nome;
 
     @Getter
-    @Column(name = "DS_EMAIL_PROF", nullable = false, length = 255)
-    private String email;
+    @Column(name = "DS_EMAIL_PESSOAL", nullable = false, length = 255)
+    private String emailPessoal;
+
+    @Getter
+    @Column(name = "DS_EMAIL_CORP", length = 255, unique = true)
+    private String emailCorporativo;
 
     @Getter
     @Column(name = "NR_CPF_PROF", nullable = false, length = 14)
     private String cpf;
-
-    /* --- campos específicos de Médico (nullable) --- */
 
     @Getter
     @Column(name = "NR_CRM_PROF", length = 20)
@@ -61,8 +54,6 @@ public class PreCadastroProfissional {
     @Column(name = "DS_ESPECIALIDADE_PROF", length = 100)
     private String especialidade;
 
-    /* --- campos específicos de Enfermeiro (nullable) --- */
-
     @Getter
     @Column(name = "NR_COREN_PROF", length = 20)
     private String coren;
@@ -75,8 +66,6 @@ public class PreCadastroProfissional {
     @Enumerated(EnumType.STRING)
     @Column(name = "CAT_COREN_PROF", length = 3)
     private CategoriaCoren categoriaCoren;
-
-    /* --- campos de controle do pré-cadastro --- */
 
     @Getter
     @Column(name = "ID_ADM_CRIADOR", nullable = false)
@@ -115,14 +104,14 @@ public class PreCadastroProfissional {
 
     public static PreCadastroProfissional criarParaMedico(
             String nome,
-            String email,
+            String emailPessoal,
             String cpf,
             String crm,
             String ufCrm,
             String especialidade,
             Long idAdminCriador) {
 
-        PreCadastroProfissional p = basico(nome, email, cpf, TipoProfissional.MEDICO, idAdminCriador);
+        PreCadastroProfissional p = basico(nome, emailPessoal, cpf, TipoProfissional.MEDICO, idAdminCriador);
         p.crm          = crm;
         p.ufCrm        = ufCrm;
         p.especialidade = especialidade;
@@ -131,14 +120,14 @@ public class PreCadastroProfissional {
 
     public static PreCadastroProfissional criarParaEnfermeiro(
             String nome,
-            String email,
+            String emailPessoal,
             String cpf,
             String coren,
             String ufCoren,
             CategoriaCoren categoriaCoren,
             Long idAdminCriador) {
 
-        PreCadastroProfissional p = basico(nome, email, cpf, TipoProfissional.ENFERMEIRO, idAdminCriador);
+        PreCadastroProfissional p = basico(nome, emailPessoal, cpf, TipoProfissional.ENFERMEIRO, idAdminCriador);
         p.coren         = coren;
         p.ufCoren       = ufCoren;
         p.categoriaCoren = categoriaCoren;
@@ -146,12 +135,12 @@ public class PreCadastroProfissional {
     }
 
     private static PreCadastroProfissional basico(
-            String nome, String email, String cpf,
+            String nome, String emailPessoal, String cpf,
             TipoProfissional tipo, Long idAdminCriador) {
 
         PreCadastroProfissional p = new PreCadastroProfissional();
         p.nome            = nome;
-        p.email           = email;
+        p.emailPessoal    = emailPessoal;
         p.cpf             = cpf;
         p.tipoProfissional = tipo;
         p.idAdminCriador  = idAdminCriador;
@@ -162,7 +151,10 @@ public class PreCadastroProfissional {
         return p;
     }
 
-    // diasExpiracao: quantos dias o link ficará válido a partir do envio
+    public void definirEmailCorporativo(String emailCorporativo) {
+        this.emailCorporativo = emailCorporativo;
+    }
+
     public LocalDateTime registrarEnvioEmail(int diasExpiracao) {
         LocalDateTime expiracao = LocalDateTime.now().plusDays(diasExpiracao);
         this.emailEnviado          = true;

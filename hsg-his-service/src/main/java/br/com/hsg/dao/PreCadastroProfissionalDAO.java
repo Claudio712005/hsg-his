@@ -55,7 +55,7 @@ public class PreCadastroProfissionalDAO {
     public PreCadastroProfissional buscarPorEmail(String email) {
         try {
             return em.createQuery(
-                    "SELECT p FROM PreCadastroProfissional p WHERE p.email = :email",
+                    "SELECT p FROM PreCadastroProfissional p WHERE p.emailPessoal = :email",
                     PreCadastroProfissional.class)
                     .setParameter("email", email)
                     .getSingleResult();
@@ -119,10 +119,19 @@ public class PreCadastroProfissionalDAO {
 
     public boolean existeEmailPendente(String email) {
         Long count = em.createQuery(
-                "SELECT COUNT(p) FROM PreCadastroProfissional p WHERE p.email = :email AND p.status = :status",
+                "SELECT COUNT(p) FROM PreCadastroProfissional p WHERE p.emailPessoal = :email AND p.status = :status",
                 Long.class)
                 .setParameter("email", email)
                 .setParameter("status", StatusPreCadastro.PENDENTE)
+                .getSingleResult();
+        return count > 0;
+    }
+
+    public boolean existeEmailCorporativo(String emailCorp) {
+        Long count = em.createQuery(
+                "SELECT COUNT(p) FROM PreCadastroProfissional p WHERE p.emailCorporativo = :emailCorp",
+                Long.class)
+                .setParameter("emailCorp", emailCorp)
                 .getSingleResult();
         return count > 0;
     }

@@ -15,7 +15,6 @@
 
     <div class="err-actions">
 
-        <!-- Botão Voltar ao Início: visível apenas se estiver logado -->
         <h:panelGroup rendered="#{erroBean.exibirBotaoHome}">
             <a href="#{erroBean.homeUrl}" class="err-btn primary">
                 <i class="fas fa-home"/>
@@ -25,7 +24,6 @@
 
         <div class="err-divider" style="#{erroBean.exibirBotaoHome ? '' : 'display:none;'}"/>
 
-        <!-- Botão Voltar ao Login: sempre visível, encerra sessão e redireciona ao Keycloak -->
         <a href="#{request.contextPath}/logout" class="err-btn secondary">
             <i class="fas fa-sign-in-alt"/>
             Ir para o Login
