@@ -53,8 +53,13 @@
                                  style="width:100%;"
                                  maxlength="255"
                                  required="true"
-                                 requiredMessage="Nome é obrigatório."/>
+                                 requiredMessage="Nome é obrigatório."
+                                 placeholder="Ex: João da Silva"
+                                 autocomplete="name"/>
                     <p:message for="nome" styleClass="field-error"/>
+                    <div style="font-size:11px; color:#888; margin-top:2px;">
+                        Será usado para gerar o e-mail corporativo (nome.sobrenome@dominio)
+                    </div>
                 </h:panelGroup>
 
                 <h:panelGroup layout="block" styleClass="k">
@@ -69,11 +74,15 @@
                                  maxlength="255"
                                  required="true"
                                  requiredMessage="E-mail pessoal é obrigatório."
-                                 title="Utilizado para o envio do convite de ativação">
+                                 placeholder="Ex: joao.silva@gmail.com"
+                                 autocomplete="email">
                         <f:validateRegex pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}"
                                          message="Informe um e-mail válido."/>
                     </p:inputText>
                     <p:message for="emailPessoal" styleClass="field-error"/>
+                    <div style="font-size:11px; color:#888; margin-top:2px;">
+                        Utilizado exclusivamente para o envio do convite de ativação
+                    </div>
                 </h:panelGroup>
 
                 <h:panelGroup layout="block" styleClass="k">
@@ -81,15 +90,18 @@
                     <h:outputText value=" *" style="color:#c00;"/>
                 </h:panelGroup>
                 <h:panelGroup layout="block" styleClass="v">
-                    <p:inputText id="cpf"
+                    <p:inputMask id="cpf"
                                  value="#{preCadastroBean.form.cpf}"
+                                 mask="999.999.999-99"
+                                 slotChar="_"
                                  styleClass="input-field mono"
-                                 style="width:180px;"
-                                 maxlength="14"
+                                 style="width:160px;"
                                  required="true"
-                                 requiredMessage="CPF é obrigatório."
-                                 placeholder="000.000.000-00"/>
+                                 requiredMessage="CPF é obrigatório."/>
                     <p:message for="cpf" styleClass="field-error"/>
+                    <div style="font-size:11px; color:#888; margin-top:2px;">
+                        Formato: 000.000.000-00
+                    </div>
                 </h:panelGroup>
 
             </h:panelGroup>
