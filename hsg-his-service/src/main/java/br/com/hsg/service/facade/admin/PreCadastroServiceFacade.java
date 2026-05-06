@@ -34,6 +34,8 @@ public interface PreCadastroServiceFacade {
 
     void enviarConvite(Long preCadastroId, Long idAdmin, String nomeAdmin);
 
+    void concluirCadastro(String token);
+
     List<EnvioConviteHistorico> buscarHistorico(Long preCadastroId);
 
     PreCadastroProfissional buscarPorToken(String token);

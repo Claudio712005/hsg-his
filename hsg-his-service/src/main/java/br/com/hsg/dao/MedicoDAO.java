@@ -25,6 +25,12 @@ public class MedicoDAO {
         }
     }
 
+    public Medico salvar(Medico medico) {
+        em.persist(medico);
+        em.flush();
+        return medico;
+    }
+
     public Medico buscarPorKeycloakId(String keycloakId) {
         try {
             return em.createQuery(

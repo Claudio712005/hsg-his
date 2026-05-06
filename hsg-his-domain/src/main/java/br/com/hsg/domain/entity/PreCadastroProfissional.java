@@ -156,7 +156,8 @@ public class PreCadastroProfissional {
     }
 
     public LocalDateTime registrarEnvioEmail(int diasExpiracao) {
-        LocalDateTime expiracao = LocalDateTime.now().plusDays(diasExpiracao);
+        this.tokenConvite          = UUID.randomUUID().toString();
+        LocalDateTime expiracao    = LocalDateTime.now().plusDays(diasExpiracao);
         this.emailEnviado          = true;
         this.dataEnvioEmail        = LocalDateTime.now();
         this.dataExpiracaoConvite  = expiracao;

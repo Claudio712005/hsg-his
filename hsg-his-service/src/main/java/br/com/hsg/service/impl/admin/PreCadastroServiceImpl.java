@@ -19,7 +19,7 @@ import java.util.List;
 @Stateless
 public class PreCadastroServiceImpl implements PreCadastroServiceFacade {
 
-    private static final int DIAS_EXPIRACAO_CONVITE = 7;
+    private static final int DIAS_EXPIRACAO_CONVITE = 2;
 
     @EJB private PreCadastroProfissionalDAO preCadastroDAO;
     @EJB private EnvioConviteHistoricoDAO   historicoDAO;
@@ -74,7 +74,14 @@ public class PreCadastroServiceImpl implements PreCadastroServiceFacade {
             throw new IllegalStateException("Convite só pode ser enviado para pré-cadastros com status PENDENTE.");
         }
 
-        LocalDateTime dataExpiracao = LocalDateTime.now().plusDays(DIAS_EXPIRACAO_CONVITE);
+        if (preCadastro.isEmailEnviado() && !preCadastro.isConviteExpirado()) {
+            throw new IllegalStateException("O convite anterior ainda está válido. Aguarde sua expiração antes de reenviar.");
+        }
+
+        preCadastro.registrarEnvioEmail(DIAS_EXPIRACAO_CONVITE);
+        preCadastroDAO.atualizar(preCadastro);
+
+        LocalDateTime dataExpiracao = preCadastro.getDataExpiracaoConvite();
 
         try {
             mailService.enviarConviteProfissional(
@@ -83,9 +90,6 @@ public class PreCadastroServiceImpl implements PreCadastroServiceFacade {
                     preCadastro.getTipoProfissional(),
                     preCadastro.getTokenConvite(),
                     preCadastro.getEmailCorporativo());
-
-            preCadastro.registrarEnvioEmail(DIAS_EXPIRACAO_CONVITE);
-            preCadastroDAO.atualizar(preCadastro);
 
             historicoDAO.salvar(EnvioConviteHistorico.registrarEnvio(
                     preCadastro, idAdmin, nomeAdmin, dataExpiracao));
@@ -96,6 +100,25 @@ public class PreCadastroServiceImpl implements PreCadastroServiceFacade {
                     e.getMessage() != null ? e.getMessage() : "Falha desconhecida no envio do e-mail."));
             throw e;
         }
+    }
+
+    @Override
+    public void concluirCadastro(String token) {
+        if (token == null || token.trim().isEmpty()) {
+            throw new IllegalArgumentException("Token inválido.");
+        }
+        PreCadastroProfissional p = preCadastroDAO.buscarPorToken(token.trim());
+        if (p == null) {
+            throw new IllegalArgumentException("Token inválido ou não encontrado.");
+        }
+        if (!p.isPendente()) {
+            throw new IllegalStateException("Este convite já foi utilizado ou o cadastro já foi concluído.");
+        }
+        if (p.isConviteExpirado()) {
+            throw new IllegalStateException("Este convite expirou. Entre em contato com a administração do sistema.");
+        }
+        p.concluir();
+        preCadastroDAO.atualizar(p);
     }
 
     @Override

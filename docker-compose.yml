@@ -63,6 +63,16 @@ services:
     networks:
       - hsg-network
 
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: hsg-mailhog
+    restart: unless-stopped
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - hsg-network
+
   keycloak:
     build:
       context: .
@@ -120,12 +130,30 @@ services:
       KC_TOKEN_URL:   "http://keycloak:8080/realms/hsg-his/protocol/openid-connect/token"
       KC_CLIENT_ID:   "hsg-his-web"
       KC_REDIRECT_URI: "http://localhost:8180/hsg-his/callback"
+
+      MAIL_SMTP_HOST:     mailhog
+      MAIL_SMTP_PORT:     "1025"
+      MAIL_SMTP_AUTH:     "false"
+      MAIL_SMTP_STARTTLS: "false"
+      MAIL_SMTP_FROM:     "noreply@hsg-his.com.br"
+
+      HSG_BASE_URL:       "http://localhost:8180/hsg-his"
+      HSG_EMAIL_DOMINIO:  "hsg.com.br"
+
+      KC_ADMIN_BASE_URL:  "http://keycloak:8080"
+      KC_REALM:           "hsg-his"
+      KC_ADMIN_USER:      "admin"
+      KC_ADMIN_PASS:      "Admin@HSG2026"
+
+      CPF_ENCRYPTION_KEY: "HSG_DEV_ONLY_PLACEHOLDER_32CHAR_"
     ports:
       - "8180:8080"
     depends_on:
       seed:
         condition: service_completed_successfully
       keycloak:
+        condition: service_started
+      mailhog:
         condition: service_started
     networks:
       - hsg-network

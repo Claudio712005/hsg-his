@@ -88,7 +88,7 @@ public class PreCadastroBean implements Serializable {
             String nomeAdmin = beanSessao.getAdmin().getNomeCompleto();
             preCadastroService.enviarConvite(preCadastroId, idAdmin, nomeAdmin);
             JSFUtil.adicionarMensagem(null, FacesMessage.SEVERITY_INFO,
-                    "Convite enviado com sucesso. Link válido por 7 dias.");
+                    "Convite enviado com sucesso. Link válido por 2 dias.");
             carregarLista();
             if (selecionado != null && selecionado.getId().equals(preCadastroId)) {
                 selecionado = preCadastroService.buscarPorId(preCadastroId);

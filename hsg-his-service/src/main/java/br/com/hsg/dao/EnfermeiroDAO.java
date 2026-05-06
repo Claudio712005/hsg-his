@@ -25,6 +25,12 @@ public class EnfermeiroDAO {
         }
     }
 
+    public Enfermeiro salvar(Enfermeiro enfermeiro) {
+        em.persist(enfermeiro);
+        em.flush();
+        return enfermeiro;
+    }
+
     public Enfermeiro buscarPorKeycloakId(String keycloakId) {
         try {
             return em.createQuery(

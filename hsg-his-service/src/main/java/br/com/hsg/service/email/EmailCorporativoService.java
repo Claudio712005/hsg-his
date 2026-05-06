@@ -6,10 +6,6 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import java.text.Normalizer;
 
-/**
- * Gera e-mails corporativos únicos no padrão primeironome.ultimosobrenome@dominio.
- * Sufixo numérico é adicionado automaticamente em caso de conflito.
- */
 @Stateless
 public class EmailCorporativoService {
 

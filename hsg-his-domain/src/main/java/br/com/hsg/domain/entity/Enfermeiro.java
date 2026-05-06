@@ -126,6 +126,11 @@ public class Enfermeiro {
         return coren;
     }
 
+    public void definirCpf(String cpfHash, String cpfEncrypted) {
+        this.cpfHash      = cpfHash;
+        this.cpfEncrypted = cpfEncrypted;
+    }
+
     public boolean podeLogar() {
         return IndicativoStatus.A.equals(this.status);
     }

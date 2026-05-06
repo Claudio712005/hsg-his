@@ -25,4 +25,9 @@ data-source add \
   --use-java-context=true \
   --enabled=true
 
+/socket-binding-group=standard-sockets/remote-destination-outbound-socket-binding=mail-smtp:write-attribute(name=host, value="${env.MAIL_SMTP_HOST:localhost}")
+/socket-binding-group=standard-sockets/remote-destination-outbound-socket-binding=mail-smtp:write-attribute(name=port, value="${env.MAIL_SMTP_PORT:1025}")
+
+/subsystem=mail/mail-session=default/server=smtp:write-attribute(name=tls, value="${env.MAIL_SMTP_STARTTLS:false}")
+
 stop-embedded-server

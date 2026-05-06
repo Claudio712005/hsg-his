@@ -61,4 +61,14 @@ public enum EspecialidadeMedica {
     UROLOGIA("Urologia");
 
     private String descricao;
+
+    public static EspecialidadeMedica fromDescricao(String descricao) {
+        if (descricao == null || descricao.trim().isEmpty()) return null;
+        for (EspecialidadeMedica e : values()) {
+            if (e.descricao.equalsIgnoreCase(descricao.trim())) {
+                return e;
+            }
+        }
+        throw new IllegalArgumentException("Especialidade médica desconhecida: " + descricao);
+    }
 }
